@@ -271,7 +271,16 @@ function App() {
           <div className="container">
             <SectionIntro number="06 / Services" eyebrow="How I can help" title="Technology with a business purpose." />
             <div className="services-grid">
-              {services.map(({ id, title, text, icon: Icon }, index) => <article className="service-card reveal" style={{ "--delay": `${index * 80}ms` }} key={id}><Icon /><div><h3>{title}</h3><p>{text}</p><a href="#contact">Let&apos;s discuss <FiArrowUpRight /></a></div></article>)}
+              {services.map(({ id, title, text, icon: Icon }, index) => (
+                <article className="service-card reveal" style={{ "--delay": `${index * 80}ms` }} key={id}>
+                  <span className="service-icon"><Icon /></span>
+                  <div>
+                    <h3>{title}</h3>
+                    <p>{text}</p>
+                    <a href="#contact">Let&apos;s discuss <FiArrowUpRight /></a>
+                  </div>
+                </article>
+              ))}
             </div>
           </div>
         </section>
