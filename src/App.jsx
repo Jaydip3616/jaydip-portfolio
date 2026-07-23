@@ -271,10 +271,11 @@ function App() {
           <div className="container">
             <SectionIntro number="06 / Services" eyebrow="How I can help" title="Technology with a business purpose." />
             <div className="services-grid">
-              {services.map(({ id, title, text, icon: Icon }, index) => (
-                <article className="service-card reveal" style={{ "--delay": `${index * 80}ms` }} key={id}>
+              {services.map(({ id, title, text, icon: Icon, accent }, index) => (
+                <article className="service-card reveal" style={{ "--card-accent": accent, "--delay": `${index * 80}ms` }} key={id}>
+                  <span className="service-index" aria-hidden="true">0{index + 1}</span>
                   <span className="service-icon"><Icon /></span>
-                  <div>
+                  <div className="service-body">
                     <h3>{title}</h3>
                     <p>{text}</p>
                     <a href="#contact">Let&apos;s discuss <FiArrowUpRight /></a>
@@ -288,12 +289,34 @@ function App() {
         <section id="contact" className="section contact-section">
           <div className="container contact-grid">
             <div className="contact-halo halo-one" /><div className="contact-halo halo-two" />
-            <div className="contact-copy reveal"><p className="section-number">07 / Contact</p><h2>Have a problem worth solving?</h2><p>Whether you&apos;re hiring, building a product, or exploring an idea, I&apos;d be happy to hear about it.</p><a className="contact-email" href={`mailto:${contactEmail}`}><FiMail /> {contactEmail}</a><div className="contact-location"><FiMapPin /> Ahmedabad, Gujarat, India</div></div>
+            <div className="contact-copy reveal">
+              <p className="section-number">07 / Contact</p>
+              <p className="eyebrow"><span /> Let&apos;s connect</p>
+              <h2>Let&apos;s build something intelligent together.</h2>
+              <p className="contact-lead">Whether you&apos;re hiring, building a product, or exploring an idea, I&apos;d be glad to hear about it and figure out how I can help.</p>
+              <div className="contact-methods">
+                <a className="contact-method" href={`mailto:${contactEmail}`}>
+                  <span className="contact-method-icon"><FiMail /></span>
+                  <span className="contact-method-text"><small>Email</small><strong>{contactEmail}</strong></span>
+                </a>
+                <div className="contact-method">
+                  <span className="contact-method-icon"><FiMapPin /></span>
+                  <span className="contact-method-text"><small>Location</small><strong>Ahmedabad, Gujarat, India</strong></span>
+                </div>
+              </div>
+              <div className="contact-socials" aria-label="Social links">
+                {socialLinks.map(({ id, label, icon: Icon, url }) => (
+                  <a key={id} href={url} target={url.startsWith("http") ? "_blank" : undefined} rel={url.startsWith("http") ? "noreferrer" : undefined} aria-label={label}><Icon /></a>
+                ))}
+              </div>
+            </div>
             <form className="contact-form reveal reveal-delay" onSubmit={handleContactSubmit}>
-              <label>Your name<input name="name" type="text" autoComplete="name" required /></label>
-              <label>Email address<input name="email" type="email" autoComplete="email" required /></label>
+              <div className="form-row">
+                <label>Your name<input name="name" type="text" autoComplete="name" placeholder="Jane Doe" required /></label>
+                <label>Email address<input name="email" type="email" autoComplete="email" placeholder="you@example.com" required /></label>
+              </div>
               <label>What can I help with?<input name="subject" type="text" placeholder="Project, role, collaboration..." /></label>
-              <label>Your message<textarea name="message" rows="4" required /></label>
+              <label>Your message<textarea name="message" rows="5" placeholder="Tell me a little about what you have in mind..." required /></label>
               <button className="button button-primary" type="submit">Send message <FiSend /></button>
               {isSubmitted && <p className="form-notice">Your email app should now be open. If it didn&apos;t open, email Jaydip directly.</p>}
             </form>

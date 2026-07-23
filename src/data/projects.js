@@ -1,3 +1,7 @@
+import heartDiseaseImg from "../assets/Heart Disease Prediction.png";
+import bloodDonationImg from "../assets/Blood Donation Prediction.png";
+import telecomChurnImg from "../assets/Telecom Churn Prediction.png";
+
 const projects = [
   {
     id: "skillgap",
@@ -44,6 +48,7 @@ const projects = [
     description: "A machine-learning classification project that explores clinical indicators to estimate heart-disease risk.",
     outcome: "Demonstrates an end-to-end predictive modelling workflow.",
     technologies: ["Python", "Pandas", "scikit-learn", "Classification"],
+    image: heartDiseaseImg,
     github: "https://github.com/Jaydip3616/Heart-Disease-Predication",
     live: "",
   },
@@ -56,6 +61,7 @@ const projects = [
     description: "A classification project focused on identifying potential repeat blood donors from historical donation patterns.",
     outcome: "Uses behavioural data to support targeted outreach decisions.",
     technologies: ["Python", "Pandas", "Machine Learning", "EDA"],
+    image: bloodDonationImg,
     github: "https://github.com/Jaydip3616/Warm_Up_Predict_Blood_Donations_Traning_Data",
     live: "",
   },
@@ -68,6 +74,7 @@ const projects = [
     description: "An analytical and modelling project that examines customer behaviour to identify churn risk.",
     outcome: "Connects predictive insight to possible retention actions.",
     technologies: ["Python", "scikit-learn", "Feature Engineering", "Analytics"],
+    image: telecomChurnImg,
     github: "https://github.com/Jaydip3616/No-Churn-Telecom",
     live: "",
   },
