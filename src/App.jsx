@@ -22,8 +22,10 @@ import { FaGithub } from "react-icons/fa";
 import "./App.css";
 import profilePhoto from "./assets/Jaydip-photo.jpg";
 import heroVisual from "./assets/hero-updated.png";
+import CodeRain from "./components/Common/CodeRain";
 import DataCanvas from "./components/Common/DataCanvas";
 import certifications from "./data/certifications";
+import education from "./data/education";
 import experience from "./data/experience";
 import navigation from "./data/navigation";
 import projects from "./data/projects";
@@ -74,6 +76,17 @@ function App() {
     }, delay);
     return () => window.clearTimeout(timeoutId);
   }, [typedRole, roleIndex, isDeleting]);
+
+  useEffect(() => {
+    const heroCanvas = document.querySelector(".hero-canvas-wrap");
+    if (!heroCanvas) return undefined;
+    const onScroll = () => {
+      const fade = Math.max(0, 1 - window.scrollY / (window.innerHeight * 0.7));
+      heroCanvas.style.opacity = fade * 0.45;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   useEffect(() => {
     const sections = document.querySelectorAll("main section[id]");
@@ -134,6 +147,8 @@ function App() {
 
       <main>
         <section id="home" className="hero section">
+          <CodeRain theme={theme} />
+          <div className="hero-canvas-wrap"><DataCanvas theme={theme} /></div>
           <div className="container hero-grid">
             <div className="hero-copy reveal">
               <p className="eyebrow"><span /> AI & Data Science Developer</p>
@@ -152,16 +167,19 @@ function App() {
             </div>
 
             <div className="hero-art reveal reveal-delay">
-              <DataCanvas theme={theme} />
-              <div className="hero-orbit orbit-one" />
-              <div className="hero-orbit orbit-two" />
-              <div className="hero-glow" />
               <div className="hero-photo-frame"><img src={heroVisual} alt="Abstract AI and data-science illustration" /></div>
               <div className="floating-note note-top"><FiCpuIcon /> AI · ML · Automation</div>
               <div className="floating-note note-bottom"><span className="status-dot" /> Available for opportunities</div>
             </div>
           </div>
         </section>
+
+        <div className="marquee-strip" aria-hidden="true">
+          <div className="marquee-track">
+            <span className="marquee-content">DATA SCIENCE <i>•</i> MACHINE LEARNING <i>•</i> ARTIFICIAL INTELLIGENCE <i>•</i> GENERATIVE AI <i>•</i> NLP <i>•</i> COMPUTER VISION <i>•</i> PYTHON <i>•</i> SQL <i>•</i> POWER BI <i>•</i> TABLEAU <i>•</i> FLASK <i>•</i> FASTAPI <i>•</i> STREAMLIT <i>•</i> REACT <i>•</i> GIT <i>•</i> GITHUB <i>•</i> DOCKER <i>•</i> DATA ANALYTICS <i>•</i> DEEP LEARNING <i>•</i> LLMs <i>•</i> AUTOMATION <i>•</i></span>
+            <span className="marquee-content">DATA SCIENCE <i>•</i> MACHINE LEARNING <i>•</i> ARTIFICIAL INTELLIGENCE <i>•</i> GENERATIVE AI <i>•</i> NLP <i>•</i> COMPUTER VISION <i>•</i> PYTHON <i>•</i> SQL <i>•</i> POWER BI <i>•</i> TABLEAU <i>•</i> FLASK <i>•</i> FASTAPI <i>•</i> STREAMLIT <i>•</i> REACT <i>•</i> GIT <i>•</i> GITHUB <i>•</i> DOCKER <i>•</i> DATA ANALYTICS <i>•</i> DEEP LEARNING <i>•</i> LLMs <i>•</i> AUTOMATION <i>•</i></span>
+          </div>
+        </div>
 
         <section id="about" className="section about-section">
           <div className="container about-grid">
@@ -267,9 +285,45 @@ function App() {
           </div>
         </section>
 
+        <section id="education" className="section education-section">
+          <div className="container">
+            <SectionIntro number="06 / Education" eyebrow="Academic background" title="Foundation that started the journey." />
+            <div className="education-grid">
+              {education.map((edu) => (
+                <article className="education-card reveal" key={edu.id}>
+                  <div className="edu-accent-bar" />
+                  <div className="edu-header">
+                    <div className="edu-icon-wrap">
+                      <span className="edu-icon">🎓</span>
+                    </div>
+                    <div className="edu-meta">
+                      <span className="edu-period"><FiCalendar /> {edu.period}</span>
+                      <span className="edu-location"><FiMapPin /> {edu.location}</span>
+                    </div>
+                  </div>
+                  <div className="edu-body">
+                    <h3>{edu.institution}</h3>
+                    <p className="edu-degree">{edu.degree}</p>
+                    <p className="edu-field">{edu.field}</p>
+                  </div>
+                  <ul className="edu-highlights">
+                    {edu.highlights.map((item) => (
+                      <li key={item}><FiCheck /> {item}</li>
+                    ))}
+                  </ul>
+                  <div className="edu-badge">
+                    <span className="edu-badge-dot" />
+                    Completed
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
         <section id="services" className="section">
           <div className="container">
-            <SectionIntro number="06 / Services" eyebrow="How I can help" title="Technology with a business purpose." />
+            <SectionIntro number="07 / Services" eyebrow="How I can help" title="Technology with a business purpose." />
             <div className="services-grid">
               {services.map(({ id, title, text, icon: Icon, accent }, index) => (
                 <article className="service-card reveal" style={{ "--card-accent": accent, "--delay": `${index * 80}ms` }} key={id}>
@@ -290,7 +344,7 @@ function App() {
           <div className="container contact-grid">
             <div className="contact-halo halo-one" /><div className="contact-halo halo-two" />
             <div className="contact-copy reveal">
-              <p className="section-number">07 / Contact</p>
+              <p className="section-number">08 / Contact</p>
               <p className="eyebrow"><span /> Let&apos;s connect</p>
               <h2>Let&apos;s build something intelligent together.</h2>
               <p className="contact-lead">Whether you&apos;re hiring, building a product, or exploring an idea, I&apos;d be glad to hear about it and figure out how I can help.</p>
