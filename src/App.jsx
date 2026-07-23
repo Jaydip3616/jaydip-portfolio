@@ -149,27 +149,31 @@ function App() {
         <section id="home" className="hero section">
           <CodeRain theme={theme} />
           <div className="hero-canvas-wrap"><DataCanvas theme={theme} /></div>
-          <div className="container hero-grid">
-            <div className="hero-copy reveal">
-              <p className="eyebrow"><span /> AI & Data Science Developer</p>
-              <h1>Building intelligent solutions for <em>real-world</em> work.</h1>
-              <p className="typewriter" aria-label="AI and Data Science Developer"><span aria-hidden="true">{typedRole}</span><i aria-hidden="true" /></p>
-              <p className="hero-summary">I combine data, machine learning, and automation to help teams make smarter decisions and move faster.</p>
-              <div className="hero-actions">
-                <a className="button button-primary" href="#projects">Explore my work <FiArrowDownRight /></a>
-                <a className="button button-ghost" href="#contact">Start a conversation <FiChevronRight /></a>
-              </div>
-              <div className="hero-socials" aria-label="Social links">
-                {socialLinks.map(({ id, label, icon: Icon, url }) => (
-                  <a key={id} href={url} target={url.startsWith("http") ? "_blank" : undefined} rel={url.startsWith("http") ? "noreferrer" : undefined} aria-label={label}><Icon /></a>
-                ))}
-              </div>
+          <div className="container hero-intro reveal">
+            <span className="hero-status-pill"><span className="status-dot" /> Available for Opportunities</span>
+            <h1 className="hero-headline">Hi, I&apos;m <span className="hero-name-accent">Jaydip Pithava</span></h1>
+            <p className="typewriter" aria-label="AI and Data Science Developer"><span aria-hidden="true">{typedRole}</span><i aria-hidden="true" /></p>
+            <div className="hero-expertise-pills">
+              <span className="expertise-pill">🎯 Data Scientist</span>
+              <span className="expertise-pill">🤖 AI &amp; ML</span>
+              <span className="expertise-pill">📊 Data Analytics</span>
+              <span className="expertise-pill">⚡ Automation</span>
             </div>
-
-            <div className="hero-art reveal reveal-delay">
-              <div className="hero-photo-frame"><img src={heroVisual} alt="Abstract AI and data-science illustration" /></div>
-              <div className="floating-note note-top"><FiCpuIcon /> AI · ML · Automation</div>
-              <div className="floating-note note-bottom"><span className="status-dot" /> Available for opportunities</div>
+            <p className="hero-intro-text">AI &amp; Data Science Developer building intelligent applications, data-driven tools, and automation workflows. IABAC Certified — focused on turning complex data into real business impact.</p>
+            <div className="hero-stats">
+              <div className="hero-stat"><strong>4×</strong><span>Certified</span></div>
+              <div className="hero-stat"><strong>12+</strong><span>Months Experience</span></div>
+              <div className="hero-stat"><strong>6+</strong><span>Projects</span></div>
+              <div className="hero-stat"><strong>4</strong><span>Certifications</span></div>
+            </div>
+            <div className="hero-actions">
+              <a className="button button-primary" href="#projects">Explore my work <FiArrowDownRight /></a>
+              <a className="button button-ghost" href="#contact">Get in touch <FiChevronRight /></a>
+            </div>
+            <div className="hero-socials" aria-label="Social links">
+              {socialLinks.map(({ id, label, icon: Icon, url }) => (
+                <a key={id} href={url} target={url.startsWith("http") ? "_blank" : undefined} rel={url.startsWith("http") ? "noreferrer" : undefined} aria-label={label}><Icon /></a>
+              ))}
             </div>
           </div>
         </section>
