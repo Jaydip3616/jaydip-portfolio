@@ -190,8 +190,8 @@ function App() {
             <div className="about-aside reveal"><p className="section-number">01 / About</p><div className="portrait-mark"><img src={profilePhoto} alt="Jaydip Pithava" /></div></div>
             <div className="about-content reveal reveal-delay">
               <h2>Turning curiosity into practical technology.</h2>
-              <p>I&apos;m Jaydip Pithava, an AI and Data Science Developer with a BBA in Finance and a Certified Data Scientist background. I enjoy making intelligent applications, data-driven tools, and automation workflows useful for real business problems.</p>
-              <p>My work is grounded in the full process: understanding the problem, preparing reliable data, building an approach, and communicating results clearly.</p>
+              <p>I started with a BBA in Finance from Gujarat University — numbers, strategy, and business thinking. That analytical mindset led me to data science, where I earned my IABAC certification and trained at Datamites over 120 intensive hours.</p>
+              <p>Today I work across the full pipeline: from cleaning messy datasets and engineering features to building models that actually solve the problem at hand. What drives me is the bridge between raw data and a clear, useful answer someone can act on.</p>
             </div>
           </div>
         </section>
