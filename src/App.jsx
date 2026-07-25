@@ -148,6 +148,13 @@ function App() {
             {isMenuOpen ? <FiX /> : <FiMenu />}
           </button>
 
+          <div className="header-right-actions">
+            <button className="theme-toggle-mobile" type="button" onClick={() => setTheme((current) => current === "light" ? "dark" : "light")} aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`}>
+              {theme === "light" ? <FiMoon /> : <FiSun />}
+            </button>
+            <a className="button button-small button-primary nav-cta-mobile" href="#contact" onClick={closeMenu}>Let&apos;s talk <FiArrowUpRight /></a>
+          </div>
+
           <div className={`nav-panel ${isMenuOpen ? "is-open" : ""}`}>
             <ul className="nav-links">
               {navigation.map((item) => (
@@ -157,7 +164,7 @@ function App() {
               ))}
             </ul>
             <div className="nav-actions">
-              <button className="theme-toggle" type="button" onClick={() => setTheme((current) => current === "light" ? "dark" : "light")} aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`} title={`Switch to ${theme === "light" ? "dark" : "light"} mode`}>
+              <button className="theme-toggle theme-toggle-desktop" type="button" onClick={() => setTheme((current) => current === "light" ? "dark" : "light")} aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`} title={`Switch to ${theme === "light" ? "dark" : "light"} mode`}>
                 {theme === "light" ? <FiMoon /> : <FiSun />}<span>{theme === "light" ? "Dark" : "Light"}</span>
               </button>
               <a className="button button-small button-primary nav-cta" href="#contact" onClick={closeMenu}>Let&apos;s talk <FiArrowUpRight /></a>
