@@ -22,6 +22,7 @@ import {
 import { FaGithub } from "react-icons/fa";
 import "./App.css";
 import profilePhoto from "./assets/Jaydip-photo.jpg";
+import SplashScreen from "./components/Common/SplashScreen";
 import CodeRain from "./components/Common/CodeRain";
 import DataCanvas from "./components/Common/DataCanvas";
 import certifications from "./data/certifications";
@@ -44,6 +45,7 @@ function getInitialTheme() {
 }
 
 function App() {
+  const [showSplash, setShowSplash] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -86,7 +88,7 @@ function App() {
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [showSplash]);
 
   useEffect(() => {
     const reveals = document.querySelectorAll(".reveal");
@@ -108,7 +110,7 @@ function App() {
     );
     reveals.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  }, []);
+  }, [showSplash]);
 
   useEffect(() => {
     const sections = document.querySelectorAll("main section[id]");
@@ -123,7 +125,7 @@ function App() {
 
     sections.forEach((section) => observer.observe(section));
     return () => observer.disconnect();
-  }, []);
+  }, [showSplash]);
 
   const closeMenu = () => setIsMenuOpen(false);
 
@@ -136,6 +138,10 @@ function App() {
     setIsSubmitted(true);
     event.currentTarget.reset();
   };
+
+  if (showSplash) {
+    return <SplashScreen onComplete={() => setShowSplash(false)} />;
+  }
 
   return (
     <div className="site-shell">
