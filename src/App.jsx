@@ -6,6 +6,7 @@ import {
   FiCheck,
   FiCheckCircle,
   FiChevronRight,
+  FiDownload,
   FiExternalLink,
   FiMail,
   FiMapPin,
@@ -409,7 +410,13 @@ function App() {
         </section>
       </main>
 
-      <footer className="site-footer"><div className="container footer-inner"><p>© {new Date().getFullYear()} Jaydip Pithava. Built with intention.</p><a href="#home">Back to top <FiArrowUpRight /></a></div></footer>
+      <footer className="site-footer">
+        <div className="container footer-inner">
+          <a className="button button-primary resume-btn" href="https://drive.google.com/file/d/1DpVxz7H1b9-3OPSlZlS-Ftlm31Mts2H8/view?usp=sharing" target="_blank" rel="noreferrer"><FiDownload /> Download Resume</a>
+          <p>© {new Date().getFullYear()} Jaydip Pithava. Built with intention.</p>
+          <a href="#home">Back to top <FiArrowUpRight /></a>
+        </div>
+      </footer>
     </div>
   );
 }
