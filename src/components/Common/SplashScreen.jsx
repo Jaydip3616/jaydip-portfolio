@@ -1,80 +1,125 @@
 import { useEffect, useRef, useState } from "react";
 
-const lines = [
-  { text: "> Initializing AI workspace...", delay: 0 },
-  { text: "> Loading models", delay: 400, hasProgress: true },
-  { text: "> Connecting data pipelines...", delay: 1100 },
-  { text: "> Jaydip Pithava — AI & Data Science Developer", delay: 1500, highlight: true },
-  { text: "> Ready.", delay: 1900, ready: true },
-];
+const NAME = "Jaydip Pithava";
+const PARTICLE_COUNT = 60;
 
 function SplashScreen({ onComplete }) {
-  const [visibleLines, setVisibleLines] = useState([]);
-  const [progress, setProgress] = useState(0);
+  const canvasRef = useRef(null);
+  const [revealedChars, setRevealedChars] = useState(0);
+  const [subtitle, setSubtitle] = useState(false);
   const [fading, setFading] = useState(false);
   const onCompleteRef = useRef(onComplete);
   onCompleteRef.current = onComplete;
 
+  // Letter-by-letter reveal
   useEffect(() => {
-    const timeouts = [];
+    let i = 0;
+    const interval = setInterval(() => {
+      i += 1;
+      setRevealedChars(i);
+      if (i >= NAME.length) clearInterval(interval);
+    }, 80);
 
-    lines.forEach((_, i) => {
-      const t = setTimeout(() => {
-        setVisibleLines((prev) => [...prev, i]);
-      }, lines[i].delay);
-      timeouts.push(t);
-    });
+    const subtitleTimeout = setTimeout(() => setSubtitle(true), NAME.length * 80 + 300);
+    const fadeTimeout = setTimeout(() => setFading(true), 2800);
+    const completeTimeout = setTimeout(() => onCompleteRef.current(), 3400);
 
-    // Progress bar
-    const progressStart = setTimeout(() => {
-      let p = 0;
-      const interval = setInterval(() => {
-        p += 16;
-        if (p > 100) p = 100;
-        setProgress(p);
-        if (p >= 100) clearInterval(interval);
-      }, 40);
-    }, 450);
-    timeouts.push(progressStart);
+    return () => {
+      clearInterval(interval);
+      clearTimeout(subtitleTimeout);
+      clearTimeout(fadeTimeout);
+      clearTimeout(completeTimeout);
+    };
+  }, []);
 
-    // Fade out and complete
-    const fadeOut = setTimeout(() => setFading(true), 2400);
-    timeouts.push(fadeOut);
+  // Particle canvas
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    let frameId;
+    let particles = [];
 
-    const complete = setTimeout(() => {
-      onCompleteRef.current();
-    }, 3000);
-    timeouts.push(complete);
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
 
-    return () => timeouts.forEach((t) => clearTimeout(t));
+    const createParticles = () => {
+      particles = Array.from({ length: PARTICLE_COUNT }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        vx: (Math.random() - 0.5) * 0.6,
+        vy: (Math.random() - 0.5) * 0.6,
+        radius: Math.random() * 2 + 0.5,
+        alpha: Math.random() * 0.5 + 0.2,
+      }));
+    };
+
+    const draw = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      particles.forEach((p) => {
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(138, 166, 255, ${p.alpha})`;
+        ctx.fill();
+      });
+
+      // Draw connections
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 120) {
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = `rgba(138, 166, 255, ${(1 - dist / 120) * 0.15})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        }
+      }
+
+      frameId = requestAnimationFrame(draw);
+    };
+
+    resize();
+    createParticles();
+    draw();
+    window.addEventListener("resize", resize);
+
+    return () => {
+      cancelAnimationFrame(frameId);
+      window.removeEventListener("resize", resize);
+    };
   }, []);
 
   return (
     <div className={`splash-screen ${fading ? "splash-fade" : ""}`}>
-      <div className="splash-terminal">
-        <div className="splash-header">
-          <span className="splash-dot splash-dot-red" />
-          <span className="splash-dot splash-dot-yellow" />
-          <span className="splash-dot splash-dot-green" />
-          <span className="splash-title">terminal — ai_workspace</span>
-        </div>
-        <div className="splash-body">
-          {lines.map((line, i) => (
-            <div
+      <canvas ref={canvasRef} className="splash-particles" />
+      <div className="splash-content">
+        <h1 className="splash-name">
+          {NAME.split("").map((char, i) => (
+            <span
               key={i}
-              className={`splash-line ${visibleLines.includes(i) ? "splash-line-visible" : ""} ${line.highlight ? "splash-line-highlight" : ""} ${line.ready ? "splash-line-ready" : ""}`}
+              className={`splash-char ${i < revealedChars ? "splash-char-visible" : ""}`}
             >
-              {line.hasProgress ? (
-                <span>
-                  {line.text} <span className="splash-progress">{"█".repeat(Math.floor(progress / 8))}{"░".repeat(Math.max(0, 12 - Math.floor(progress / 8)))}</span> {progress}%
-                </span>
-              ) : (
-                <span>{line.text}</span>
-              )}
-              {line.ready && visibleLines.includes(i) && <span className="splash-cursor" />}
-            </div>
+              {char === " " ? "\u00A0" : char}
+            </span>
           ))}
-        </div>
+          <span className="splash-name-cursor" />
+        </h1>
+        <p className={`splash-subtitle ${subtitle ? "splash-subtitle-visible" : ""}`}>
+          AI &amp; Data Science Developer
+        </p>
       </div>
     </div>
   );
