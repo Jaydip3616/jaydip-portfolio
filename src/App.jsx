@@ -144,15 +144,14 @@ function App() {
             <span className="brand-bracket">&lt;</span><span className="brand-name">Jaydip Pithava</span><span className="brand-bracket">&gt;</span>
           </a>
 
-          <button className="menu-toggle" type="button" aria-label="Toggle navigation menu" aria-expanded={isMenuOpen} onClick={() => setIsMenuOpen((open) => !open)}>
-            {isMenuOpen ? <FiX /> : <FiMenu />}
-          </button>
-
           <div className="header-right-actions">
             <button className="theme-toggle-mobile" type="button" onClick={() => setTheme((current) => current === "light" ? "dark" : "light")} aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`}>
               {theme === "light" ? <FiMoon /> : <FiSun />}
             </button>
             <a className="button button-small button-primary nav-cta-mobile" href="#contact" onClick={closeMenu}>Let&apos;s talk <FiArrowUpRight /></a>
+            <button className="menu-toggle" type="button" aria-label="Toggle navigation menu" aria-expanded={isMenuOpen} onClick={() => setIsMenuOpen((open) => !open)}>
+              {isMenuOpen ? <FiX /> : <FiMenu />}
+            </button>
           </div>
 
           <div className={`nav-panel ${isMenuOpen ? "is-open" : ""}`}>
