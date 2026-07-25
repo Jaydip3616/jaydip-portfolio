@@ -97,7 +97,7 @@ function App() {
             const parent = el.parentElement;
             const siblings = parent ? Array.from(parent.querySelectorAll(":scope > .reveal")) : [el];
             const idx = siblings.indexOf(el);
-            const stagger = idx >= 0 ? idx * 120 : 0;
+            const stagger = idx >= 0 ? idx * 180 : 0;
             setTimeout(() => el.classList.add("is-visible"), stagger);
             observer.unobserve(el);
           }
