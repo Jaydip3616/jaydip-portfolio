@@ -21,7 +21,6 @@ import {
 import { FaGithub } from "react-icons/fa";
 import "./App.css";
 import profilePhoto from "./assets/Jaydip-photo.jpg";
-import heroVisual from "./assets/hero-updated.png";
 import CodeRain from "./components/Common/CodeRain";
 import DataCanvas from "./components/Common/DataCanvas";
 import certifications from "./data/certifications";
@@ -86,6 +85,28 @@ function App() {
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    const reveals = document.querySelectorAll(".reveal");
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const el = entry.target;
+            const parent = el.parentElement;
+            const siblings = parent ? Array.from(parent.querySelectorAll(":scope > .reveal")) : [el];
+            const idx = siblings.indexOf(el);
+            const stagger = idx >= 0 ? idx * 120 : 0;
+            setTimeout(() => el.classList.add("is-visible"), stagger);
+            observer.unobserve(el);
+          }
+        });
+      },
+      { rootMargin: "0px 0px -40px 0px", threshold: 0.05 },
+    );
+    reveals.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
@@ -390,7 +411,5 @@ function App() {
 function SectionIntro({ number, eyebrow, title, action }) {
   return <div className="section-intro reveal"><div><p className="section-number">{number}</p><p className="eyebrow"><span /> {eyebrow}</p></div><div><h2>{title}</h2>{action}</div></div>;
 }
-
-function FiCpuIcon() { return <span className="mini-cpu">✦</span>; }
 
 export default App;
