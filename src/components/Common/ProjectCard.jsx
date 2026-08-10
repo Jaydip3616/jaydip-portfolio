@@ -1,6 +1,6 @@
 import "./ProjectCard.css";
 
-function ProjectCard({ title, description, technologies }) {
+function ProjectCard({ title, description, technologies, github }) {
 
     return (
 
@@ -24,11 +24,15 @@ function ProjectCard({ title, description, technologies }) {
 
             </div>
 
-            <button>
-
-                View Project
-
-            </button>
+            {github ? (
+                <a href={github} target="_blank" rel="noopener noreferrer">
+                    <button>View Project</button>
+                </a>
+            ) : (
+                <button disabled style={{ opacity: 0.5, cursor: "not-allowed" }}>
+                    View Project
+                </button>
+            )}
 
         </div>
 

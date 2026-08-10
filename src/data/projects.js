@@ -12,7 +12,7 @@ const projects = [
     description: "An AI resume analyzer that compares a resume with a job description and suggests targeted ATS improvements.",
     outcome: "Turns an unclear application gap into actionable next steps.",
     technologies: ["Python", "Flask", "NLP", "scikit-learn"],
-    github: "",
+    github: "https://github.com/Jaydip3616/skillgap_ai",
     live: "",
   },
   {

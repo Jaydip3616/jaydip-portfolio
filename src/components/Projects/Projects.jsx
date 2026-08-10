@@ -36,6 +36,8 @@ function Projects(){
 
                             technologies={project.technologies}
 
+                            github={project.github}
+
                         />
 
                     ))}
