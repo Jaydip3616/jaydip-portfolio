@@ -1,131 +1,132 @@
 /* ═══════════════════════════════════════════════════════════════
-   TechEcosystem — Magical Portal Emergence
-   Matches reference: 3D disc → cone beam → icons rising inside
+   TechEcosystem — Portal Emergence v3
+   Reference: large wide pedestals, broad shallow cones,
+   organised rows of icons rising from the light funnel.
 ═══════════════════════════════════════════════════════════════ */
 
-/* ── outer wrapper ─────────────────────────────────────────── */
 .te-wrap {
   display: flex;
   flex-direction: column;
-  gap: 56px;
+  gap: 52px;
 }
 
-/* ══════════════════════════════════════════════════════════
-   SCENE
-══════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════
+   SCENE — horizontal row of groups
+═══════════════════════════════════ */
 .te-scene {
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  gap: 32px;
-  flex-wrap: wrap;
-  padding-top: 24px;
+  gap: 0;                   /* groups share edge spacing themselves */
+  overflow-x: auto;         /* horizontal scroll on very small screens */
+  scrollbar-width: none;
+  padding: 16px 0 0;
 }
+.te-scene::-webkit-scrollbar { display: none; }
 
-/* ══════════════════════════════════════════════════════════
-   PORTAL  (one complete unit)
-══════════════════════════════════════════════════════════ */
-.portal {
-  --p-color: #5b7cfa;
-  --p-rgb:   91,124,250;
+/* ═══════════════════════════════════
+   GROUP  — one complete portal unit
+═══════════════════════════════════ */
+.grp {
+  --g-color: #6b8cff;
+  --g-rgb:   107,140,255;
 
   position: relative;
-  width: 160px;         /* column width */
   flex-shrink: 0;
-  /* height enough for tallest icon row (row 0 ~310px + disc ~60px + label ~28px) */
-  height: 460px;
+  width: 260px;
+  /* total height = icon area (280) + cone (280) + pedestal (52) + title (32) */
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-end;
 }
 
-/* ── category label ─────────────────────────────────────── */
-.portal__label {
+/* ── title ─────────────────────────────────────────────── */
+.grp__title {
   position: absolute;
   top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  white-space: nowrap;
+  left: 0; right: 0;
+  text-align: center;
   font-family: "Space Grotesk","Manrope",sans-serif;
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--p-color);
-  opacity: 0.9;
+  color: var(--g-color);
+  margin: 0;
+  padding: 0 8px;
   z-index: 10;
 }
 
-/* ══════════════════════════════════════════════════════════
-   ICON FIELD  — absolute positioned items inside the beam
-══════════════════════════════════════════════════════════ */
-.portal__icon-field {
+/* ═══════════════════════════════════
+   ICON FIELD  — absolute-positioned
+   Sits between title (top: ~28px) and
+   cone top (bottom of icon field)
+═══════════════════════════════════ */
+.grp__icons {
   position: absolute;
-  bottom: 60px;   /* sit just above disc top */
+  top: 28px;
   left: 0; right: 0;
-  top: 28px;      /* below label */
-  pointer-events: none; /* field itself not interactive */
+  height: 280px;
+  pointer-events: none;
+  z-index: 5;
 }
 
-/* each icon absolutely placed via CSS variables */
-.portal__icon {
+/* Each icon is absolute; row/col set via inline vars */
+.pi {
   position: absolute;
-  left: 50%;
-  bottom: var(--iy, 120px);
+  /* horizontal: 50% + var(--pi-x)  — no translateX needed, left:50% + margin-left trick */
   transform:
-    translateX(calc(-50% + var(--ix, 0px)))
-    scale(var(--is, 1));
-  opacity: var(--io, 1);
+    translateX(calc(-50% + var(--pi-x, 0px)))
+    scale(var(--pi-s, 1));
+  opacity: var(--pi-o, 1);
   pointer-events: all;
   cursor: pointer;
   outline: none;
-  z-index: 4;
-  /* continuous float */
-  animation: portal-float 3.8s ease-in-out var(--fd, 0s) infinite;
+  /* continuous breath float */
+  animation: pi-float 3.6s ease-in-out var(--pi-fd, 0s) infinite;
   will-change: transform;
+  z-index: 6;
 }
 
-/* icon background circle — clean, no box corners */
-.portal__icon-bg {
+/* circular icon bubble */
+.pi__bubble {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 52px;
-  height: 52px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
-  background: color-mix(in srgb, var(--p-color) 12%, var(--card, #fff));
-  border: 1.5px solid color-mix(in srgb, var(--p-color) 35%, transparent);
-  color: var(--p-color);
+  background: color-mix(in srgb, var(--pi-c, var(--primary)) 11%, var(--card, #fff));
+  border: 1.5px solid color-mix(in srgb, var(--pi-c, var(--primary)) 32%, transparent);
+  color: var(--pi-c, var(--primary));
   box-shadow:
-    0 4px 16px color-mix(in srgb, var(--p-color) 18%, transparent),
-    0 1px 4px rgba(0,0,0,0.06);
+    0 4px 14px color-mix(in srgb, var(--pi-c, var(--primary)) 16%, transparent),
+    0 1px 3px rgba(0,0,0,0.06);
   transition:
-    background   200ms ease,
-    box-shadow   200ms ease,
+    background 200ms ease,
+    box-shadow 200ms ease,
     border-color 200ms ease;
 }
 
-/* hover glow on the circle */
-.portal__icon:hover  .portal__icon-bg,
-.portal__icon:focus  .portal__icon-bg {
-  background: color-mix(in srgb, var(--p-color) 22%, var(--card, #fff));
-  border-color: color-mix(in srgb, var(--p-color) 70%, transparent);
+/* hover lift + glow (handled by Framer whileHover on .pi) */
+.pi:hover .pi__bubble,
+.pi:focus .pi__bubble {
+  background: color-mix(in srgb, var(--pi-c, var(--primary)) 20%, var(--card, #fff));
+  border-color: color-mix(in srgb, var(--pi-c, var(--primary)) 65%, transparent);
   box-shadow:
-    0 0 0 5px color-mix(in srgb, var(--p-color) 14%, transparent),
-    0 12px 28px color-mix(in srgb, var(--p-color) 30%, transparent);
+    0 0 0 4px color-mix(in srgb, var(--pi-c, var(--primary)) 14%, transparent),
+    0 10px 28px color-mix(in srgb, var(--pi-c, var(--primary)) 28%, transparent);
 }
 
-/* tech name — appears on hover/focus */
-.portal__icon-name {
-  display: block;
+/* name label */
+.pi__label {
   position: absolute;
   bottom: calc(100% + 6px);
   left: 50%;
   transform: translateX(-50%);
   white-space: nowrap;
   font-family: "Space Grotesk","Manrope",sans-serif;
-  font-size: 0.62rem;
+  font-size: 0.6rem;
   font-weight: 700;
   letter-spacing: 0.02em;
   color: var(--ink, #172238);
@@ -136,11 +137,10 @@
   box-shadow: 0 3px 10px rgba(0,0,0,0.10);
   pointer-events: none;
   opacity: 0;
-  scale: 0.9;
-  transition: opacity 150ms ease, scale 150ms ease;
+  transition: opacity 150ms ease;
   z-index: 20;
 }
-.portal__icon-name::after {
+.pi__label::after {
   content: "";
   position: absolute;
   top: 100%; left: 50%;
@@ -148,131 +148,120 @@
   border: 4px solid transparent;
   border-top-color: var(--card-line, #c2cddd);
 }
-.portal__icon:hover  .portal__icon-name,
-.portal__icon:focus  .portal__icon-name {
-  opacity: 1;
-  scale: 1;
-}
+.pi:hover .pi__label,
+.pi:focus .pi__label { opacity: 1; }
 
-/* ══════════════════════════════════════════════════════════
-   CONE BEAM
-══════════════════════════════════════════════════════════ */
-.portal__beam {
+/* ═══════════════════════════════════
+   CONE  — wide, shallow, SVG
+   sits below icon field, above pedestal
+═══════════════════════════════════ */
+.grp__cone {
   position: absolute;
-  bottom: 54px;   /* sits on top of disc */
-  left: 50%;
-  transform: translateX(-50%);
+  /* top: matches bottom of icon field (28 + 280 = 308px from group top) */
+  top: 308px;
+  left: 0; right: 0;
+  height: 280px;
   transform-origin: bottom center;
-  width: 160px;
-  height: 340px;
   pointer-events: none;
-  z-index: 2;
+  z-index: 3;
 }
 
-.portal__beam-svg {
+.grp__cone-svg {
   width: 100%;
   height: 100%;
   display: block;
 }
 
-/* soft edge glow lines down each side of cone */
-.portal__beam-edge {
+/* ═══════════════════════════════════
+   PEDESTAL  — large 3D disc
+   sits at the very bottom of group
+═══════════════════════════════════ */
+.grp__pedestal {
   position: absolute;
+  /* top: cone bottom (308 + 280 = 588) — but we anchor from bottom instead */
   bottom: 0;
-  width: 2px;
-  height: 85%;
-  background: linear-gradient(
-    to bottom,
-    transparent 0%,
-    color-mix(in srgb, var(--p-color) 30%, transparent) 100%
-  );
-  filter: blur(2px);
-  border-radius: 999px;
-}
-.portal__beam-edge--l { left: 0;   transform-origin: bottom left;  transform: rotate(12deg);  }
-.portal__beam-edge--r { right: 0;  transform-origin: bottom right; transform: rotate(-12deg); }
-
-/* ══════════════════════════════════════════════════════════
-   3D DISC PLATFORM  — matches reference exactly
-══════════════════════════════════════════════════════════ */
-.portal__disc {
-  position: relative;
-  width: 140px;
+  width: 210px;
   z-index: 5;
   transform-origin: center bottom;
 }
 
-/* top face — ellipse, bright gradient */
-.portal__disc-top {
+/* elliptical top face */
+.grp__ped-top {
   position: relative;
-  height: 24px;
+  height: 26px;
   border-radius: 50%;
   background: linear-gradient(
-    170deg,
-    color-mix(in srgb, var(--p-color) 80%, #fff 40%) 0%,
-    color-mix(in srgb, var(--p-color) 55%, #fff 20%) 60%,
-    color-mix(in srgb, var(--p-color) 40%, #000 10%) 100%
+    160deg,
+    color-mix(in srgb, var(--g-color) 75%, #fff 35%) 0%,
+    color-mix(in srgb, var(--g-color) 50%, #fff 15%) 55%,
+    color-mix(in srgb, var(--g-color) 35%, #000 15%) 100%
   );
   box-shadow:
-    inset 0 3px 8px rgba(255,255,255,0.30),
-    0 0 0 1.5px color-mix(in srgb, var(--p-color) 50%, transparent);
+    inset 0 3px 8px rgba(255,255,255,0.28),
+    0 0 0 2px color-mix(in srgb, var(--g-color) 40%, transparent);
   overflow: hidden;
 }
 
-/* white center dot */
-.portal__disc-dot {
+/* white centre dot */
+.grp__ped-dot {
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: 50%; left: 50%;
   transform: translate(-50%, -50%);
-  width: 16px;
-  height: 16px;
+  width: 18px; height: 18px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.88);
+  background: rgba(255,255,255,0.9);
   box-shadow:
-    0 0 0 3px rgba(255,255,255,0.30),
-    0 0 12px rgba(255,255,255,0.70);
+    0 0 0 4px rgba(255,255,255,0.25),
+    0 0 14px rgba(255,255,255,0.75);
 }
 
-/* ring pulse on portal activation */
-.portal__disc-ring {
+/* activation ring */
+.grp__ped-ring {
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  border: 2px solid rgba(255,255,255,0.7);
+  border: 2.5px solid rgba(255,255,255,0.8);
   pointer-events: none;
 }
 
-/* side — gives 3D cylinder depth */
-.portal__disc-side {
-  height: 22px;
-  margin: 0 5px;
+/* side — cylinder depth */
+.grp__ped-side {
+  height: 24px;
+  margin: 0 6px;
   border-radius: 0 0 50% 50% / 0 0 100% 100%;
   background: linear-gradient(
     180deg,
-    color-mix(in srgb, var(--p-color) 50%, #000 35%) 0%,
-    color-mix(in srgb, var(--p-color) 20%, #000 60%) 100%
+    color-mix(in srgb, var(--g-color) 48%, #000 35%) 0%,
+    color-mix(in srgb, var(--g-color) 18%, #000 65%) 100%
   );
 }
 
-/* ground glow beneath disc */
-.portal__disc-glow {
+/* ground glow */
+.grp__ped-glow {
   position: absolute;
-  bottom: -14px;
-  left: 50%;
+  bottom: -16px; left: 50%;
   transform: translateX(-50%);
-  width: 130px;
-  height: 28px;
+  width: 180px; height: 30px;
   border-radius: 50%;
-  background: color-mix(in srgb, var(--p-color) 50%, transparent);
-  filter: blur(16px);
-  opacity: 0.7;
-  animation: portal-glow-breathe 3s ease-in-out infinite;
+  background: color-mix(in srgb, var(--g-color) 55%, transparent);
+  filter: blur(18px);
+  animation: ped-glow 3s ease-in-out infinite;
 }
 
-/* ══════════════════════════════════════════════════════════
-   MARQUEE STRIP
-══════════════════════════════════════════════════════════ */
+/*
+ * Group total height calculation:
+ *   title:    28px (top)
+ *   icons:   280px (top 28 → 308)
+ *   cone:    280px (top 308 → 588)
+ *   pedestal: 52px (50 total, anchored bottom:0)
+ *   glow:    +16px
+ *   ⟹ min height: 308 + 280 + 52 + 16 = 656px  (use 660px)
+ */
+.grp { height: 660px; }
+
+/* ═══════════════════════════════════
+   MARQUEE
+═══════════════════════════════════ */
 .te-strip {
   display: flex;
   align-items: center;
@@ -291,128 +280,106 @@
   flex-shrink: 0;
 }
 .te-strip__track {
-  flex: 1;
-  overflow: hidden;
+  flex: 1; overflow: hidden;
   mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent);
   -webkit-mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent);
 }
 .te-strip__inner {
-  display: flex;
-  width: max-content;
+  display: flex; width: max-content;
   animation: te-marquee 28s linear infinite;
 }
 .te-strip:hover .te-strip__inner { animation-play-state: paused; }
 .te-strip__item {
-  display: inline-flex;
-  align-items: center;
-  gap: 16px;
+  display: inline-flex; align-items: center; gap: 16px;
   font-family: "Space Grotesk","Manrope",sans-serif;
-  font-size: 0.74rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: var(--muted, #66728a);
-  white-space: nowrap;
+  font-size: 0.74rem; font-weight: 600; letter-spacing: 0.04em;
+  color: var(--muted, #66728a); white-space: nowrap;
   transition: color 180ms ease;
 }
 .te-strip__item:hover { color: var(--primary, #4965c4); }
 .te-strip__sep { color: var(--lime, #b7e553); font-size: 0.5em; opacity: 0.8; }
 
-/* ══════════════════════════════════════════════════════════
+/* ═══════════════════════════════════
    KEYFRAMES
-══════════════════════════════════════════════════════════ */
-@keyframes portal-float {
-  0%,100% { transform:
-    translateX(calc(-50% + var(--ix,0px)))
-    scale(var(--is,1))
-    translateY(0px); }
-  50%      { transform:
-    translateX(calc(-50% + var(--ix,0px)))
-    scale(var(--is,1))
-    translateY(-8px); }
+═══════════════════════════════════ */
+@keyframes pi-float {
+  0%,100% { transform: translateX(calc(-50% + var(--pi-x,0px))) scale(var(--pi-s,1)) translateY(0px); }
+  50%      { transform: translateX(calc(-50% + var(--pi-x,0px))) scale(var(--pi-s,1)) translateY(-7px); }
 }
-@keyframes portal-glow-breathe {
-  0%,100% { opacity:0.55; transform:translateX(-50%) scaleX(1);    }
-  50%      { opacity:0.90; transform:translateX(-50%) scaleX(1.18); }
+@keyframes ped-glow {
+  0%,100% { opacity:.55; transform:translateX(-50%) scaleX(1);    }
+  50%      { opacity:.9;  transform:translateX(-50%) scaleX(1.18); }
 }
 @keyframes te-marquee {
-  from { transform:translateX(0);    }
+  from { transform:translateX(0); }
   to   { transform:translateX(-50%); }
 }
 
-/* ══════════════════════════════════════════════════════════
-   RESPONSIVE — 1200px: fit 5 portals without wrap
-══════════════════════════════════════════════════════════ */
-@media (max-width: 1200px) {
-  .portal       { width: 140px; }
-  .portal__disc { width: 120px; }
-  .portal__beam { width: 140px; }
-  .te-scene     { gap: 20px; }
+/* ═══════════════════════════════════
+   RESPONSIVE — 1100px
+   Still fits 4×260px = 1040px
+═══════════════════════════════════ */
+@media (max-width: 1100px) {
+  .grp          { width: 220px; }
+  .grp__pedestal{ width: 176px; }
+  .grp__ped-glow{ width: 150px; }
 }
 
-/* ══════════════════════════════════════════════════════════
-   RESPONSIVE — TABLET  ≤ 860px: 3 portals per row
-══════════════════════════════════════════════════════════ */
-@media (max-width: 860px) {
-  .te-scene  { gap: 24px 16px; }
-  .portal    { width: 150px; height: 420px; }
-  .portal__beam { width: 150px; height: 300px; }
-  .portal__disc { width: 120px; }
-  .portal__icon-bg { width: 46px; height: 46px; }
-}
-
-/* ══════════════════════════════════════════════════════════
-   RESPONSIVE — MOBILE  ≤ 600px: 2 portals per row
-══════════════════════════════════════════════════════════ */
-@media (max-width: 600px) {
-  .te-wrap  { gap: 36px; }
-  .te-scene { gap: 16px 12px; padding-top: 12px; }
-
-  .portal {
-    width: calc(50% - 8px);
-    max-width: 154px;
-    min-width: 130px;
-    height: 380px;
+/* ═══════════════════════════════════
+   RESPONSIVE — TABLET  ≤ 800px
+   2 groups per row
+═══════════════════════════════════ */
+@media (max-width: 800px) {
+  .te-scene {
+    flex-wrap: wrap;
+    gap: 32px 0;
+    justify-content: center;
+    overflow-x: visible;
   }
-  .portal__label { font-size: 0.6rem; letter-spacing: 0.04em; }
+  .grp { width: 45vw; max-width: 280px; min-width: 200px; }
+  .grp__pedestal { width: 68%; }
+  .grp__ped-glow { width: 90%; }
+  .grp__title { font-size: 0.6rem; }
+  .pi__bubble { width: 44px; height: 44px; }
+}
 
-  .portal__beam  { width: 130px; height: 260px; bottom: 46px; }
-  .portal__disc  { width: 106px; }
-  .portal__disc-top  { height: 18px; }
-  .portal__disc-side { height: 17px; }
-  .portal__disc-dot  { width: 13px; height: 13px; }
+/* ═══════════════════════════════════
+   RESPONSIVE — MOBILE  ≤ 520px
+   2 groups per row, smaller
+═══════════════════════════════════ */
+@media (max-width: 520px) {
+  .te-wrap { gap: 32px; }
+  .te-scene { gap: 24px 0; }
+  .grp { width: 47vw; min-width: 150px; max-width: 200px; height: 500px; }
 
-  .portal__icon-field { bottom: 48px; }
-  .portal__icon-bg    { width: 40px; height: 40px; }
+  .grp__title { font-size: 0.55rem; letter-spacing: 0.04em; }
 
-  /* On mobile labels always visible, smaller */
-  .portal__icon-name {
+  /* compress icon/cone/pedestal heights */
+  .grp__icons { top: 22px; height: 210px; }
+  .grp__cone  { top: 232px; height: 210px; }
+  .grp__pedestal { width: 72%; }
+  .grp__ped-top  { height: 18px; }
+  .grp__ped-side { height: 18px; }
+  .grp__ped-dot  { width: 13px; height: 13px; }
+
+  .pi__bubble { width: 38px; height: 38px; }
+
+  /* always-visible labels on mobile */
+  .pi__label {
     opacity: 1;
-    scale: 1;
-    font-size: 0.56rem;
-    bottom: calc(100% + 4px);
+    font-size: 0.52rem;
     padding: 2px 5px;
+    bottom: calc(100% + 3px);
   }
 
   .te-strip__label { display: none; }
   .te-strip { padding-top: 16px; }
-  .te-strip__item { font-size: 0.68rem; gap: 12px; }
+  .te-strip__item { font-size: 0.67rem; gap: 12px; }
 }
 
-/* ══════════════════════════════════════════════════════════
-   RESPONSIVE — XS  ≤ 380px
-══════════════════════════════════════════════════════════ */
-@media (max-width: 380px) {
-  .portal    { height: 340px; min-width: 110px; }
-  .portal__beam { width: 110px; height: 220px; }
-  .portal__disc { width: 90px; }
-  .portal__icon-bg { width: 36px; height: 36px; }
-}
-
-/* ══════════════════════════════════════════════════════════
+/* ═══════════════════════════════════
    REDUCED MOTION
-══════════════════════════════════════════════════════════ */
+═══════════════════════════════════ */
 @media (prefers-reduced-motion: reduce) {
-  .portal__icon,
-  .portal__disc-glow,
-  .te-strip__inner { animation: none !important; }
+  .pi, .grp__ped-glow, .te-strip__inner { animation: none !important; }
 }
