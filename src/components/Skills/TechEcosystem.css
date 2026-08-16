@@ -404,52 +404,57 @@
 @media (max-width: 640px) {
   .te-wrap { gap: 28px; }
 
-  /* Orb — keep but make smaller, pause the heavy orbiting dots */
+  /* Orb — smaller but still visible with animation */
   .te-core {
-    width: 120px;
-    height: 120px;
+    width: 140px;
+    height: 140px;
   }
-  /* Keep only 1 ring on mobile, hide the other two */
-  .te-core__ring--1 { width: 120px; height: 120px; animation-duration: 22s; }
+  /* Keep ring-1 spinning at correct size */
+  .te-core__ring--1 { width: 140px; height: 140px; animation-duration: 22s; }
+  /* Hide the heavier rings */
   .te-core__ring--2 { display: none; }
   .te-core__ring--3 { display: none; }
-  /* Hide orbiting dots — the main lag source */
+  /* Hide orbiting dots — main lag source */
   .te-core__orbit { display: none; }
-  /* Keep glow but tone it down */
+  /* Softer glow */
   .te-core__glow {
     inset: 16px;
     filter: blur(10px);
     animation-duration: 6s;
   }
   .te-core__disc {
-    width: 78px;
-    height: 78px;
-    /* promote to own GPU layer */
+    width: 90px;
+    height: 90px;
     transform: translateZ(0);
   }
   .te-core__label-top,
-  .te-core__label-bottom { font-size: 0.8rem; }
+  .te-core__label-bottom { font-size: 0.85rem; }
   .te-core__plus         { font-size: 0.55rem; }
 
-  /* Tabs — horizontal scroll, no wrap */
+  /* Tabs — horizontal scroll with padding so first/last tabs aren't clipped */
   .te-tabs {
     flex-wrap: nowrap;
     overflow-x: auto;
     justify-content: flex-start;
-    padding-bottom: 4px;
-    gap: 6px;
+    /* left/right padding ensures All and last tab are fully visible */
+    padding: 0 4px 6px 4px;
+    gap: 7px;
     scrollbar-width: none;
     -ms-overflow-style: none;
+    /* extend clickable area to edges */
+    margin: 0 -4px;
   }
   .te-tabs::-webkit-scrollbar { display: none; }
   .te-tab {
-    padding: 7px 14px;
-    font-size: 0.71rem;
+    padding: 8px 16px;
+    font-size: 0.72rem;
     white-space: nowrap;
     flex-shrink: 0;
+    /* ensure active tab indicator isn't clipped */
+    overflow: visible;
   }
 
-  /* Pills — keep icons, just slightly smaller */
+  /* Pills */
   .te-grid { gap: 8px; }
   .te-pill {
     padding: 8px 12px;
@@ -459,7 +464,7 @@
   .te-pill__icon { font-size: 1rem; }
   .te-pill__name { font-size: 0.72rem; }
 
-  /* Active pill on mobile — keep the color, drop the box-shadow blur */
+  /* Active pill on mobile */
   .te-pill--active {
     transform: translateY(-2px) scale(1.02);
     box-shadow: 0 4px 12px color-mix(in srgb, var(--pill-accent) 22%, transparent);
