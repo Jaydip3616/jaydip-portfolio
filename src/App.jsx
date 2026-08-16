@@ -417,8 +417,39 @@ function App() {
       </main>
 
       <footer className="site-footer">
+        <div className="container footer-top reveal">
+          <div className="footer-brand">
+            <a className="brand" href="#home" aria-label="Jaydip Pithava home">
+              <span className="brand-bracket">&lt;</span><span className="brand-name">Jaydip Pithava</span><span className="brand-bracket">&gt;</span>
+            </a>
+            <p className="footer-tagline">AI &amp; Data Science Developer building intelligent applications and data-driven tools.</p>
+            <div className="footer-socials" aria-label="Social links">
+              {socialLinks.map(({ id, label, icon: Icon, url }) => (
+                <a key={id} href={url} target={url.startsWith("http") ? "_blank" : undefined} rel={url.startsWith("http") ? "noreferrer" : undefined} aria-label={label}><Icon /></a>
+              ))}
+            </div>
+          </div>
+
+          <div className="footer-links-col">
+            <h4 className="footer-col-title">Quick Links</h4>
+            <ul className="footer-nav-list">
+              {navigation.map((item) => (
+                <li key={item.id}><a href={`#${item.id}`}>{item.title}</a></li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="footer-contact-col">
+            <h4 className="footer-col-title">Contact</h4>
+            <ul className="footer-contact-list">
+              <li><FiMail /><a href={`mailto:${contactEmail}`}>{contactEmail}</a></li>
+              <li><FiMapPin /><span>Ahmedabad, Gujarat, India</span></li>
+            </ul>
+            <a className="button button-primary resume-btn" href="https://drive.google.com/file/d/1DpVxz7H1b9-3OPSlZlS-Ftlm31Mts2H8/view?usp=sharing" target="_blank" rel="noreferrer"><FiDownload /> Download Resume</a>
+          </div>
+        </div>
+
         <div className="container footer-inner">
-          <a className="button button-primary resume-btn" href="https://drive.google.com/file/d/1DpVxz7H1b9-3OPSlZlS-Ftlm31Mts2H8/view?usp=sharing" target="_blank" rel="noreferrer"><FiDownload /> Download Resume</a>
           <p>© {new Date().getFullYear()} Jaydip Pithava. Built with intention.</p>
           <a href="#home">Back to top <FiArrowUpRight /></a>
         </div>
