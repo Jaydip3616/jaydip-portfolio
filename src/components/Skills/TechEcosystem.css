@@ -1,385 +1,417 @@
 /* ═══════════════════════════════════════════════════════════════
-   TechEcosystem — Portal Emergence v3
-   Reference: large wide pedestals, broad shallow cones,
-   organised rows of icons rising from the light funnel.
+   TechEcosystem.css — Reference-exact rebuild
+   
+   KEY MEASUREMENTS (all derived from SVG viewBoxes):
+   
+   Disc SVG:   viewBox "0 0 340 120"
+     → rendered at 340px wide = 120px tall
+     → top-face cy = 34px from SVG top
+     → top-face from portal bottom = 120 - 34 = 86px
+   
+   Beam div:   bottom=86px, height=400px, width=340px
+     → transform-origin: bottom center (grows up from disc)
+   
+   Icon field: bottom=86px (same baseline as beam)
+     → icons use --iy (px above disc top-face) and --ix (px from center)
+   
+   Portal:     width=340px, height=86+400+32=518px → 530px
 ═══════════════════════════════════════════════════════════════ */
 
+/* ── Wrapper ───────────────────────────────────────────────── */
 .te-wrap {
   display: flex;
   flex-direction: column;
-  gap: 52px;
+  gap: 56px;
+  width: 100%;
 }
 
-/* ═══════════════════════════════════
-   SCENE — horizontal row of groups
-═══════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════════
+   SCENE
+══════════════════════════════════════════════════════════════ */
 .te-scene {
   display: flex;
   justify-content: center;
-  align-items: flex-end;
-  gap: 0;                   /* groups share edge spacing themselves */
-  overflow-x: auto;         /* horizontal scroll on very small screens */
+  align-items: flex-end;        /* all disc bottoms on same line */
+  gap: 8px;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  overflow-x: auto;
   scrollbar-width: none;
-  padding: 16px 0 0;
+  padding-bottom: 48px;         /* space for ground glow */
 }
 .te-scene::-webkit-scrollbar { display: none; }
 
-/* ═══════════════════════════════════
-   GROUP  — one complete portal unit
-═══════════════════════════════════ */
-.grp {
-  --g-color: #6b8cff;
-  --g-rgb:   107,140,255;
-
+/* ══════════════════════════════════════════════════════════════
+   PORTAL — one column unit
+   
+   Width  = 340px (matches disc & beam SVG viewBox)
+   Height = 530px:
+     32px  label
+     400px beam/icon area
+     86px  disc top-face offset (beam bottom)
+     +12px buffer
+══════════════════════════════════════════════════════════════ */
+.te-portal {
   position: relative;
+  width: 340px;
+  height: 530px;
   flex-shrink: 0;
-  width: 260px;
-  /* total height = icon area (280) + cone (280) + pedestal (52) + title (32) */
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-end;    /* disc flush at bottom */
 }
 
-/* ── title ─────────────────────────────────────────────── */
-.grp__title {
+/* ── Label ─────────────────────────────────────────────────── */
+.te-portal__label {
   position: absolute;
   top: 0;
-  left: 0; right: 0;
-  text-align: center;
-  font-family: "Space Grotesk","Manrope",sans-serif;
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--g-color);
-  margin: 0;
-  padding: 0 8px;
-  z-index: 10;
-}
-
-/* ═══════════════════════════════════
-   ICON FIELD  — absolute-positioned
-   Sits between title (top: ~28px) and
-   cone top (bottom of icon field)
-═══════════════════════════════════ */
-.grp__icons {
-  position: absolute;
-  top: 28px;
-  left: 0; right: 0;
-  height: 280px;
-  pointer-events: none;
-  z-index: 5;
-}
-
-/* Each icon is absolute; row/col set via inline vars */
-.pi {
-  position: absolute;
-  /* horizontal: 50% + var(--pi-x)  — no translateX needed, left:50% + margin-left trick */
-  transform:
-    translateX(calc(-50% + var(--pi-x, 0px)))
-    scale(var(--pi-s, 1));
-  opacity: var(--pi-o, 1);
-  pointer-events: all;
-  cursor: pointer;
-  outline: none;
-  /* continuous breath float */
-  animation: pi-float 3.6s ease-in-out var(--pi-fd, 0s) infinite;
-  will-change: transform;
-  z-index: 6;
-}
-
-/* circular icon bubble */
-.pi__bubble {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: color-mix(in srgb, var(--pi-c, var(--primary)) 11%, var(--card, #fff));
-  border: 1.5px solid color-mix(in srgb, var(--pi-c, var(--primary)) 32%, transparent);
-  color: var(--pi-c, var(--primary));
-  box-shadow:
-    0 4px 14px color-mix(in srgb, var(--pi-c, var(--primary)) 16%, transparent),
-    0 1px 3px rgba(0,0,0,0.06);
-  transition:
-    background 200ms ease,
-    box-shadow 200ms ease,
-    border-color 200ms ease;
-}
-
-/* hover lift + glow (handled by Framer whileHover on .pi) */
-.pi:hover .pi__bubble,
-.pi:focus .pi__bubble {
-  background: color-mix(in srgb, var(--pi-c, var(--primary)) 20%, var(--card, #fff));
-  border-color: color-mix(in srgb, var(--pi-c, var(--primary)) 65%, transparent);
-  box-shadow:
-    0 0 0 4px color-mix(in srgb, var(--pi-c, var(--primary)) 14%, transparent),
-    0 10px 28px color-mix(in srgb, var(--pi-c, var(--primary)) 28%, transparent);
-}
-
-/* name label */
-.pi__label {
-  position: absolute;
-  bottom: calc(100% + 6px);
   left: 50%;
   transform: translateX(-50%);
   white-space: nowrap;
-  font-family: "Space Grotesk","Manrope",sans-serif;
-  font-size: 0.6rem;
+  font-family: "Space Grotesk", "Manrope", sans-serif;
+  font-size: 0.68rem;
   font-weight: 700;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
   color: var(--ink, #172238);
-  background: var(--surface, #f4f7fc);
-  border: 1px solid var(--card-line, #c2cddd);
-  border-radius: 5px;
-  padding: 3px 7px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.10);
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 150ms ease;
-  z-index: 20;
+  z-index: 10;
 }
-.pi__label::after {
-  content: "";
+
+/* ══════════════════════════════════════════════════════════════
+   BEAM WRAPPER
+   
+   bottom: 86px  → beam base sits exactly on disc top-face center
+   width:  340px → same as disc SVG viewBox width
+   height: 400px → beam SVG viewBox height
+   transform-origin: bottom center → scaleY animation grows upward
+   z-index: 2 → behind icons (z:5) and disc (z:4)
+══════════════════════════════════════════════════════════════ */
+.te-portal__beam-wrap {
   position: absolute;
-  top: 100%; left: 50%;
+  bottom: 86px;
+  left: 50%;
   transform: translateX(-50%);
-  border: 4px solid transparent;
-  border-top-color: var(--card-line, #c2cddd);
-}
-.pi:hover .pi__label,
-.pi:focus .pi__label { opacity: 1; }
-
-/* ═══════════════════════════════════
-   CONE  — wide, shallow, SVG
-   sits below icon field, above pedestal
-═══════════════════════════════════ */
-.grp__cone {
-  position: absolute;
-  /* top: matches bottom of icon field (28 + 280 = 308px from group top) */
-  top: 308px;
-  left: 0; right: 0;
-  height: 280px;
   transform-origin: bottom center;
+  width: 340px;
+  height: 400px;
   pointer-events: none;
-  z-index: 3;
+  z-index: 2;
 }
 
-.grp__cone-svg {
+.te-beam {
   width: 100%;
   height: 100%;
   display: block;
 }
 
-/* ═══════════════════════════════════
-   PEDESTAL  — large 3D disc
-   sits at the very bottom of group
-═══════════════════════════════════ */
-.grp__pedestal {
+/* ══════════════════════════════════════════════════════════════
+   ICON FIELD
+   
+   bottom: 86px → same as beam (both start at disc top-face center)
+   Icons use absolute positioning:
+     bottom = var(--iy) → px above disc top-face
+     left   = 50% + var(--ix) → offset from portal center
+══════════════════════════════════════════════════════════════ */
+.te-portal__icons {
   position: absolute;
-  /* top: cone bottom (308 + 280 = 588) — but we anchor from bottom instead */
-  bottom: 0;
-  width: 210px;
-  z-index: 5;
-  transform-origin: center bottom;
-}
-
-/* elliptical top face */
-.grp__ped-top {
-  position: relative;
-  height: 26px;
-  border-radius: 50%;
-  background: linear-gradient(
-    160deg,
-    color-mix(in srgb, var(--g-color) 75%, #fff 35%) 0%,
-    color-mix(in srgb, var(--g-color) 50%, #fff 15%) 55%,
-    color-mix(in srgb, var(--g-color) 35%, #000 15%) 100%
-  );
-  box-shadow:
-    inset 0 3px 8px rgba(255,255,255,0.28),
-    0 0 0 2px color-mix(in srgb, var(--g-color) 40%, transparent);
-  overflow: hidden;
-}
-
-/* white centre dot */
-.grp__ped-dot {
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  width: 18px; height: 18px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.9);
-  box-shadow:
-    0 0 0 4px rgba(255,255,255,0.25),
-    0 0 14px rgba(255,255,255,0.75);
-}
-
-/* activation ring */
-.grp__ped-ring {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  border: 2.5px solid rgba(255,255,255,0.8);
+  bottom: 86px;
+  top: 28px;
+  left: 0;
+  right: 0;
   pointer-events: none;
 }
 
-/* side — cylinder depth */
-.grp__ped-side {
-  height: 24px;
-  margin: 0 6px;
-  border-radius: 0 0 50% 50% / 0 0 100% 100%;
-  background: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--g-color) 48%, #000 35%) 0%,
-    color-mix(in srgb, var(--g-color) 18%, #000 65%) 100%
-  );
-}
-
-/* ground glow */
-.grp__ped-glow {
+/* ── Single icon ───────────────────────────────────────────── */
+.te-icon {
   position: absolute;
-  bottom: -16px; left: 50%;
-  transform: translateX(-50%);
-  width: 180px; height: 30px;
-  border-radius: 50%;
-  background: color-mix(in srgb, var(--g-color) 55%, transparent);
-  filter: blur(18px);
-  animation: ped-glow 3s ease-in-out infinite;
+  left: 50%;
+  bottom: var(--iy, 100px);
+  /* center + horizontal offset */
+  transform: translateX(calc(-50% + var(--ix, 0px)));
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  pointer-events: all;
+  cursor: pointer;
+  outline: none;
+  z-index: 5;
+
+  /* gentle float per icon, staggered by delay */
+  animation: te-float var(--fdur, 3.5s) ease-in-out var(--fdel, 0s) infinite;
+  will-change: transform;
 }
 
-/*
- * Group total height calculation:
- *   title:    28px (top)
- *   icons:   280px (top 28 → 308)
- *   cone:    280px (top 308 → 588)
- *   pedestal: 52px (50 total, anchored bottom:0)
- *   glow:    +16px
- *   ⟹ min height: 308 + 280 + 52 + 16 = 656px  (use 660px)
- */
-.grp { height: 660px; }
+/* SVG icon — brand color, clean drop shadow */
+.te-icon svg {
+  display: block;
+  filter:
+    drop-shadow(0 4px 12px rgba(0,0,0,0.20))
+    drop-shadow(0 1px  3px rgba(0,0,0,0.12));
+  transition: filter 0.18s ease;
+}
 
-/* ═══════════════════════════════════
+.te-icon:hover svg,
+.te-icon:focus svg {
+  filter:
+    drop-shadow(0 0 14px var(--brand))
+    drop-shadow(0 5px 16px rgba(0,0,0,0.28));
+}
+
+/* ── Tooltip ───────────────────────────────────────────────── */
+.te-icon__tip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) scale(0.85);
+  white-space: nowrap;
+  font-family: "Space Grotesk", "Manrope", sans-serif;
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: var(--ink, #172238);
+  background: var(--surface-2, #ffffff);
+  border: 1px solid var(--line, #dbe2ee);
+  border-radius: 6px;
+  padding: 4px 10px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.10);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  z-index: 30;
+}
+.te-icon__tip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 4px solid transparent;
+  border-top-color: var(--line, #dbe2ee);
+}
+.te-icon:hover .te-icon__tip,
+.te-icon:focus .te-icon__tip {
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   DISC WRAPPER
+   
+   width: 340px → matches disc SVG viewBox width exactly
+   height: auto → SVG aspect 340:120 → renders 120px tall
+   overflow: visible → ground glow ellipse bleeds below
+   transform-origin: center bottom → scaleX enters from center
+   z-index: 4 → above beam (z:2), below icons (z:5)
+══════════════════════════════════════════════════════════════ */
+.te-portal__disc-wrap {
+  position: relative;
+  width: 340px;
+  flex-shrink: 0;
+  transform-origin: center bottom;
+  z-index: 4;
+}
+
+.te-disc {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+/* Ground glow breathing animation */
+.te-disc__glow {
+  animation: te-glow-pulse 3.2s ease-in-out infinite;
+  transform-origin: 170px 126px;   /* SVG units */
+}
+
+/* ══════════════════════════════════════════════════════════════
    MARQUEE
-═══════════════════════════════════ */
-.te-strip {
+══════════════════════════════════════════════════════════════ */
+.te-marquee {
   display: flex;
   align-items: center;
   gap: 20px;
   overflow: hidden;
   border-top: 1px solid var(--line, #dbe2ee);
-  padding-top: 24px;
+  padding-top: 22px;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
 }
-.te-strip__label {
-  font-family: "DM Mono",monospace;
-  font-size: 0.6rem;
+
+.te-marquee__label {
+  font-family: "DM Mono", monospace;
+  font-size: 0.60rem;
+  font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--primary, #4965c4);
   white-space: nowrap;
   flex-shrink: 0;
 }
-.te-strip__track {
-  flex: 1; overflow: hidden;
+
+.te-marquee__track {
+  flex: 1;
+  overflow: hidden;
   mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent);
   -webkit-mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent);
 }
-.te-strip__inner {
-  display: flex; width: max-content;
-  animation: te-marquee 28s linear infinite;
-}
-.te-strip:hover .te-strip__inner { animation-play-state: paused; }
-.te-strip__item {
-  display: inline-flex; align-items: center; gap: 16px;
-  font-family: "Space Grotesk","Manrope",sans-serif;
-  font-size: 0.74rem; font-weight: 600; letter-spacing: 0.04em;
-  color: var(--muted, #66728a); white-space: nowrap;
-  transition: color 180ms ease;
-}
-.te-strip__item:hover { color: var(--primary, #4965c4); }
-.te-strip__sep { color: var(--lime, #b7e553); font-size: 0.5em; opacity: 0.8; }
 
-/* ═══════════════════════════════════
+.te-marquee__inner {
+  display: flex;
+  width: max-content;
+  animation: te-marquee-scroll 30s linear infinite;
+}
+.te-marquee:hover .te-marquee__inner { animation-play-state: paused; }
+
+.te-marquee__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  font-family: "Space Grotesk", "Manrope", sans-serif;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--muted, #66728a);
+  white-space: nowrap;
+  transition: color 0.18s ease;
+}
+.te-marquee__item:hover { color: var(--primary, #4965c4); }
+.te-marquee__dot { color: var(--lime, #b7e553); opacity: 0.8; }
+
+/* ══════════════════════════════════════════════════════════════
    KEYFRAMES
-═══════════════════════════════════ */
-@keyframes pi-float {
-  0%,100% { transform: translateX(calc(-50% + var(--pi-x,0px))) scale(var(--pi-s,1)) translateY(0px); }
-  50%      { transform: translateX(calc(-50% + var(--pi-x,0px))) scale(var(--pi-s,1)) translateY(-7px); }
-}
-@keyframes ped-glow {
-  0%,100% { opacity:.55; transform:translateX(-50%) scaleX(1);    }
-  50%      { opacity:.9;  transform:translateX(-50%) scaleX(1.18); }
-}
-@keyframes te-marquee {
-  from { transform:translateX(0); }
-  to   { transform:translateX(-50%); }
+══════════════════════════════════════════════════════════════ */
+
+/* Icon float — translates Y only, preserves X transform */
+@keyframes te-float {
+  0%,100% {
+    transform: translateX(calc(-50% + var(--ix, 0px))) translateY(0px);
+  }
+  50% {
+    transform: translateX(calc(-50% + var(--ix, 0px))) translateY(-7px);
+  }
 }
 
-/* ═══════════════════════════════════
-   RESPONSIVE — 1100px
-   Still fits 4×260px = 1040px
-═══════════════════════════════════ */
+/* Ground glow breathe */
+@keyframes te-glow-pulse {
+  0%,100% { opacity: 1.00; transform: scaleX(1.00); }
+  50%      { opacity: 0.50; transform: scaleX(1.30); }
+}
+
+/* Marquee scroll */
+@keyframes te-marquee-scroll {
+  from { transform: translateX(0);    }
+  to   { transform: translateX(-50%); }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RESPONSIVE — ≤1380px
+══════════════════════════════════════════════════════════════ */
+@media (max-width: 1380px) {
+  /* Scale portals proportionally at 300px */
+  .te-portal            { width: 300px; height: 500px; }
+  .te-portal__disc-wrap { width: 300px; }
+  .te-portal__beam-wrap {
+    width: 300px;
+    height: 355px;
+    /* disc at 300px: height=300*120/340≈106px; face=300*34/340≈30px; bottom=106-30=76px */
+    bottom: 76px;
+  }
+  .te-portal__icons     { bottom: 76px; }
+  .te-scene             { gap: 4px; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RESPONSIVE — ≤1100px
+══════════════════════════════════════════════════════════════ */
 @media (max-width: 1100px) {
-  .grp          { width: 220px; }
-  .grp__pedestal{ width: 176px; }
-  .grp__ped-glow{ width: 150px; }
+  .te-portal            { width: 260px; height: 470px; }
+  .te-portal__disc-wrap { width: 260px; }
+  .te-portal__beam-wrap {
+    width: 260px;
+    height: 310px;
+    /* 260px wide: disc height≈92px; face≈26px; bottom=92-26=66px */
+    bottom: 66px;
+  }
+  .te-portal__icons     { bottom: 66px; }
+  .te-scene             { gap: 0; }
 }
 
-/* ═══════════════════════════════════
-   RESPONSIVE — TABLET  ≤ 800px
-   2 groups per row
-═══════════════════════════════════ */
-@media (max-width: 800px) {
+/* ══════════════════════════════════════════════════════════════
+   RESPONSIVE — ≤860px  2×2 grid
+══════════════════════════════════════════════════════════════ */
+@media (max-width: 860px) {
   .te-scene {
     flex-wrap: wrap;
-    gap: 32px 0;
+    gap: 64px 16px;
     justify-content: center;
     overflow-x: visible;
+    padding-bottom: 36px;
   }
-  .grp { width: 45vw; max-width: 280px; min-width: 200px; }
-  .grp__pedestal { width: 68%; }
-  .grp__ped-glow { width: 90%; }
-  .grp__title { font-size: 0.6rem; }
-  .pi__bubble { width: 44px; height: 44px; }
+  .te-portal {
+    width: calc(50% - 12px);
+    max-width: 340px;
+    min-width: 240px;
+    height: 500px;
+  }
+  .te-portal__disc-wrap { width: 100%; }
+  .te-portal__beam-wrap { width: 100%; height: 380px; bottom: 86px; }
+  .te-portal__icons     { bottom: 86px; }
 }
 
-/* ═══════════════════════════════════
-   RESPONSIVE — MOBILE  ≤ 520px
-   2 groups per row, smaller
-═══════════════════════════════════ */
-@media (max-width: 520px) {
-  .te-wrap { gap: 32px; }
-  .te-scene { gap: 24px 0; }
-  .grp { width: 47vw; min-width: 150px; max-width: 200px; height: 500px; }
+/* ══════════════════════════════════════════════════════════════
+   RESPONSIVE — ≤600px
+══════════════════════════════════════════════════════════════ */
+@media (max-width: 600px) {
+  .te-wrap  { gap: 36px; }
+  .te-scene {
+    gap: 48px 10px;
+    padding-bottom: 28px;
+  }
+  .te-portal {
+    width: calc(50% - 8px);
+    max-width: 200px;
+    min-width: 170px;
+    height: 400px;
+  }
+  .te-portal__label { font-size: 0.56rem; letter-spacing: 0.05em; }
+  .te-portal__disc-wrap { width: 100%; }
+  .te-portal__beam-wrap { width: 100%; height: 290px; bottom: 64px; }
+  .te-portal__icons     { bottom: 64px; }
 
-  .grp__title { font-size: 0.55rem; letter-spacing: 0.04em; }
-
-  /* compress icon/cone/pedestal heights */
-  .grp__icons { top: 22px; height: 210px; }
-  .grp__cone  { top: 232px; height: 210px; }
-  .grp__pedestal { width: 72%; }
-  .grp__ped-top  { height: 18px; }
-  .grp__ped-side { height: 18px; }
-  .grp__ped-dot  { width: 13px; height: 13px; }
-
-  .pi__bubble { width: 38px; height: 38px; }
-
-  /* always-visible labels on mobile */
-  .pi__label {
+  /* always show tooltip on touch */
+  .te-icon__tip {
     opacity: 1;
+    transform: translateX(-50%) scale(1);
     font-size: 0.52rem;
-    padding: 2px 5px;
-    bottom: calc(100% + 3px);
   }
-
-  .te-strip__label { display: none; }
-  .te-strip { padding-top: 16px; }
-  .te-strip__item { font-size: 0.67rem; gap: 12px; }
+  .te-marquee__label { display: none; }
+  .te-marquee        { padding-top: 14px; }
+  .te-marquee__item  { font-size: 0.68rem; gap: 10px; }
 }
 
-/* ═══════════════════════════════════
+/* ══════════════════════════════════════════════════════════════
+   RESPONSIVE — ≤400px
+══════════════════════════════════════════════════════════════ */
+@media (max-width: 400px) {
+  .te-portal {
+    height: 350px;
+    min-width: 150px;
+  }
+  .te-portal__beam-wrap { height: 250px; bottom: 56px; }
+  .te-portal__icons     { bottom: 56px; }
+}
+
+/* ══════════════════════════════════════════════════════════════
    REDUCED MOTION
-═══════════════════════════════════ */
+══════════════════════════════════════════════════════════════ */
 @media (prefers-reduced-motion: reduce) {
-  .pi, .grp__ped-glow, .te-strip__inner { animation: none !important; }
+  .te-icon,
+  .te-disc__glow,
+  .te-marquee__inner {
+    animation: none !important;
+  }
 }
