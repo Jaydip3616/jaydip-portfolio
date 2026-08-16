@@ -24,7 +24,7 @@ const projects = [
     description: "A dataset-cleaning workflow that handles missing values, duplicates, and outliers before analysis or modelling.",
     outcome: "Reduces manual preparation time and improves data readiness.",
     technologies: ["Python", "Pandas", "NumPy"],
-    github: "",
+    github: "https://github.com/Jaydip3616/autoclean-ai",
     live: "",
   },
   {
