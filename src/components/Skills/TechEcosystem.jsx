@@ -52,14 +52,14 @@ const desktopPill = {
   exit:    { opacity: 0, transition: { duration: 0.12 } },
 };
 
-// ── Animation variants — mobile (instant, no stagger) ────────────────────────
+// ── Animation variants — mobile (lighter stagger, no spring) ─────────────────
 const mobileContainer = {
-  hidden:  {},
-  visible: {},
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.025, delayChildren: 0.05 } },
 };
 const mobilePill = {
-  hidden:  { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 0.15 } },
+  hidden:  { opacity: 0, y: 12 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.22, ease: "easeOut" } },
   exit:    { opacity: 0, transition: { duration: 0.1 } },
 };
 
@@ -69,19 +69,25 @@ const tooltipVariants = {
 };
 
 // ── Single tech pill ──────────────────────────────────────────────────────────
-function TechPill({ tech, hoveredId, onHover, onLeave, mobile, containerVariants, pillVariants }) {
+function TechPill({ tech, hoveredId, onHover, onLeave, mobile, pillVariants }) {
   const accent    = CAT_ACCENT[tech.category] ?? "var(--primary)";
   const isHovered = hoveredId === tech.id;
   const isDimmed  = !mobile && hoveredId && !isHovered;
   const isActive  = isHovered;
+
+  // On mobile, tap toggles the tooltip
+  const handleMobileTap = useCallback(() => {
+    onHover(isActive ? null : tech.id);
+  }, [isActive, tech.id, onHover]);
 
   return (
     <motion.div
       className={`te-pill${isDimmed ? " te-pill--dim" : ""}${isActive ? " te-pill--active" : ""}`}
       style={{ "--pill-accent": accent }}
       variants={pillVariants}
-      onMouseEnter={() => onHover(tech.id)}
-      onMouseLeave={onLeave}
+      onMouseEnter={!mobile ? () => onHover(tech.id) : undefined}
+      onMouseLeave={!mobile ? onLeave : undefined}
+      onClick={mobile ? handleMobileTap : undefined}
       onFocus={() => onHover(tech.id)}
       onBlur={onLeave}
       tabIndex={0}
@@ -93,24 +99,21 @@ function TechPill({ tech, hoveredId, onHover, onLeave, mobile, containerVariants
       </span>
       <span className="te-pill__name">{tech.name}</span>
 
-      {/* Tooltip — only on desktop where hover works well */}
-      {!mobile && (
-        <AnimatePresence>
-          {isActive && (
-            <motion.div
-              className="te-tooltip"
-              variants={tooltipVariants}
-              initial="hidden"
-              animate="visible"
-              exit="hidden"
-              role="tooltip"
-            >
-              <span className="te-tooltip__name">{tech.name}</span>
-              <span className="te-tooltip__desc">{tech.desc}</span>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      )}
+      <AnimatePresence>
+        {isActive && (
+          <motion.div
+            className="te-tooltip"
+            variants={tooltipVariants}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+            role="tooltip"
+          >
+            <span className="te-tooltip__name">{tech.name}</span>
+            <span className="te-tooltip__desc">{tech.desc}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }
@@ -125,27 +128,20 @@ function CoreOrb({ inView, mobile }) {
       transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
       aria-hidden="true"
     >
-      {/* Rings — skip on mobile for perf */}
-      {!mobile && (
-        <>
-          <div className="te-core__ring te-core__ring--1" />
-          <div className="te-core__ring te-core__ring--2" />
-          <div className="te-core__ring te-core__ring--3" />
-        </>
-      )}
+      {/* Rings — CSS hides ring-2 and ring-3 on mobile */}
+      <div className="te-core__ring te-core__ring--1" />
+      <div className="te-core__ring te-core__ring--2" />
+      <div className="te-core__ring te-core__ring--3" />
       <div className="te-core__glow" />
       <div className="te-core__disc">
         <span className="te-core__label-top">AI</span>
         <span className="te-core__plus">+</span>
         <span className="te-core__label-bottom">DATA</span>
       </div>
-      {!mobile && (
-        <>
-          <div className="te-core__orbit te-core__orbit--a"><div className="te-core__dot" /></div>
-          <div className="te-core__orbit te-core__orbit--b"><div className="te-core__dot te-core__dot--violet" /></div>
-          <div className="te-core__orbit te-core__orbit--c"><div className="te-core__dot te-core__dot--lime" /></div>
-        </>
-      )}
+      {/* Orbiting dots — CSS hides on mobile */}
+      <div className="te-core__orbit te-core__orbit--a"><div className="te-core__dot" /></div>
+      <div className="te-core__orbit te-core__orbit--b"><div className="te-core__dot te-core__dot--violet" /></div>
+      <div className="te-core__orbit te-core__orbit--c"><div className="te-core__dot te-core__dot--lime" /></div>
     </motion.div>
   );
 }
@@ -244,7 +240,6 @@ export default function TechEcosystem() {
               onHover={handleHover}
               onLeave={handleLeave}
               mobile={mobile}
-              containerVariants={containerVariants}
               pillVariants={pillVariants}
             />
           ))}

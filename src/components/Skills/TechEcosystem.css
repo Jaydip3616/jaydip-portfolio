@@ -400,43 +400,90 @@
   .te-pill__name { font-size: 0.73rem; }
 }
 
-/* Mobile  ≤ 640px — performance-first */
+/* Mobile  ≤ 640px */
 @media (max-width: 640px) {
-  .te-wrap { gap: 24px; }
+  .te-wrap { gap: 28px; }
 
-  /* Hide orb entirely on mobile — saves ~6 spinning elements */
-  .te-core { display: none; }
+  /* Orb — keep but make smaller, pause the heavy orbiting dots */
+  .te-core {
+    width: 120px;
+    height: 120px;
+  }
+  /* Keep only 1 ring on mobile, hide the other two */
+  .te-core__ring--1 { width: 120px; height: 120px; animation-duration: 22s; }
+  .te-core__ring--2 { display: none; }
+  .te-core__ring--3 { display: none; }
+  /* Hide orbiting dots — the main lag source */
+  .te-core__orbit { display: none; }
+  /* Keep glow but tone it down */
+  .te-core__glow {
+    inset: 16px;
+    filter: blur(10px);
+    animation-duration: 6s;
+  }
+  .te-core__disc {
+    width: 78px;
+    height: 78px;
+    /* promote to own GPU layer */
+    transform: translateZ(0);
+  }
+  .te-core__label-top,
+  .te-core__label-bottom { font-size: 0.8rem; }
+  .te-core__plus         { font-size: 0.55rem; }
 
-  /* Tabs scroll horizontally instead of wrapping */
+  /* Tabs — horizontal scroll, no wrap */
   .te-tabs {
     flex-wrap: nowrap;
     overflow-x: auto;
     justify-content: flex-start;
     padding-bottom: 4px;
     gap: 6px;
-    /* hide scrollbar */
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
   .te-tabs::-webkit-scrollbar { display: none; }
-  .te-tab { padding: 7px 13px; font-size: 0.7rem; white-space: nowrap; flex-shrink: 0; }
-
-  /* Pills smaller on mobile */
-  .te-grid  { gap: 7px; }
-  .te-pill  { padding: 7px 11px; border-radius: 10px; }
-  .te-pill__icon { display: none; }
-  .te-pill__name { font-size: 0.72rem; }
-
-  /* No glow/transform on mobile — just border change */
-  .te-pill--active {
-    border-color: color-mix(in srgb, var(--pill-accent) 65%, var(--card-line));
-    background: color-mix(in srgb, var(--pill-accent) 10%, var(--card));
-    box-shadow: none;
-    transform: none;
+  .te-tab {
+    padding: 7px 14px;
+    font-size: 0.71rem;
+    white-space: nowrap;
+    flex-shrink: 0;
   }
 
+  /* Pills — keep icons, just slightly smaller */
+  .te-grid { gap: 8px; }
+  .te-pill {
+    padding: 8px 12px;
+    border-radius: 12px;
+    gap: 7px;
+  }
+  .te-pill__icon { font-size: 1rem; }
+  .te-pill__name { font-size: 0.72rem; }
+
+  /* Active pill on mobile — keep the color, drop the box-shadow blur */
+  .te-pill--active {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--pill-accent) 22%, transparent);
+  }
+
+  /* Tooltip on mobile — show below the pill so it doesn't get clipped */
+  .te-tooltip {
+    bottom: auto;
+    top: calc(100% + 8px);
+    min-width: 160px;
+    max-width: 230px;
+    font-size: 0.7rem;
+  }
+  .te-tooltip::after {
+    top: auto;
+    bottom: 100%;
+    border-top-color: transparent;
+    border-bottom-color: var(--card-line);
+  }
+
+  /* Strip */
+  .te-strip { padding-top: 20px; }
   .te-strip__label { display: none; }
-  .te-strip { padding-top: 18px; }
+  .te-strip__item { font-size: 0.72rem; gap: 10px; }
 }
 
 /* Reduced motion */
