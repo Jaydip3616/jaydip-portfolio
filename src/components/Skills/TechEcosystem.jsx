@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useMemo, useEffect } from "react";
+import { useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import {
   SiPython, SiPandas, SiNumpy, SiScikitlearn, SiTensorflow,
@@ -10,11 +10,10 @@ import {
   FiFeather, FiLayers, FiFilter, FiBarChart2, FiGitMerge,
   FiCode, FiGrid, FiPieChart, FiDatabase,
 } from "react-icons/fi";
-import { techCategories, techStack } from "../../data/skills";
 import "./TechEcosystem.css";
 
-// ── Icon map ──────────────────────────────────────────────────────────────────
-const ICON_MAP = {
+/* ── icon resolver ─────────────────────────────────────────── */
+const ICONS = {
   SiPython, SiPandas, SiNumpy, SiScikitlearn, SiTensorflow,
   SiFlask, SiFastapi, SiMysql, SiMongodb, SiPostgresql,
   SiGit, SiGithub, SiJupyter, SiDocker, SiPostman, SiLinux,
@@ -22,289 +21,249 @@ const ICON_MAP = {
   FiFeather, FiLayers, FiFilter, FiBarChart2, FiGitMerge,
   FiCode, FiGrid, FiPieChart, FiDatabase,
 };
+const Ico = ({ n, s = 26 }) => {
+  const C = ICONS[n]; return C ? <C size={s} /> : <FiCpu size={s} />;
+};
 
-function TechIcon({ name, size = 22 }) {
-  const C = ICON_MAP[name];
-  return C ? <C size={size} aria-hidden="true" /> : <FiCpu size={size} aria-hidden="true" />;
-}
-
-// ── Core tech marquee items ───────────────────────────────────────────────────
-const MARQUEE = [
-  "Python", "Machine Learning", "TensorFlow", "NLP", "Generative AI",
-  "Flask", "FastAPI", "LangChain", "SQL", "PostgreSQL",
-  "Docker", "Git", "Jupyter", "n8n", "Power BI", "Tableau",
+/* ── platform definitions ──────────────────────────────────── */
+const PLATFORMS = [
+  {
+    id: "aidata",
+    label: "AI & Data Science",
+    color: "#4965c4",
+    glow:  "rgba(73,101,196,0.55)",
+    cone:  "rgba(73,101,196,0.18)",
+    icons: [
+      { id: "python",  name: "Python",           icon: "SiPython",        col: "#3776ab" },
+      { id: "pandas",  name: "Pandas",           icon: "SiPandas",        col: "#150458" },
+      { id: "numpy",   name: "NumPy",            icon: "SiNumpy",         col: "#4dabcf" },
+      { id: "sklearn", name: "Scikit-learn",     icon: "SiScikitlearn",   col: "#f89a36" },
+      { id: "tf",      name: "TensorFlow",       icon: "SiTensorflow",    col: "#ff6f00" },
+      { id: "ml",      name: "Machine Learning", icon: "FiBriefcase",     col: "#4965c4" },
+      { id: "nlp",     name: "NLP",              icon: "FiMessageCircle", col: "#7452d5" },
+      { id: "genai",   name: "Generative AI",    icon: "FiCpu",           col: "#0ea5e9" },
+      { id: "sql",     name: "SQL",              icon: "SiMysql",         col: "#4479a1" },
+    ],
+  },
+  {
+    id: "backend",
+    label: "AI Apps & Backend",
+    color: "#7452d5",
+    glow:  "rgba(116,82,213,0.55)",
+    cone:  "rgba(116,82,213,0.18)",
+    icons: [
+      { id: "flask",     name: "Flask",           icon: "SiFlask",     col: "#000000" },
+      { id: "fastapi",   name: "FastAPI",         icon: "SiFastapi",   col: "#009688" },
+      { id: "restapi",   name: "REST API",        icon: "FiCloud",     col: "#7452d5" },
+      { id: "langchain", name: "LangChain",       icon: "FiLink",      col: "#1c3d5a" },
+      { id: "spacy",     name: "spaCy",           icon: "FiFeather",   col: "#09a3d5" },
+      { id: "sentrans",  name: "Sent. Trans.",    icon: "FiLayers",    col: "#6d28d9" },
+    ],
+  },
+  {
+    id: "database",
+    label: "Data & Databases",
+    color: "#0ea5a0",
+    glow:  "rgba(14,165,160,0.55)",
+    cone:  "rgba(14,165,160,0.18)",
+    icons: [
+      { id: "mysql",    name: "MySQL",         icon: "SiMysql",      col: "#4479a1" },
+      { id: "mongodb",  name: "MongoDB",       icon: "SiMongodb",    col: "#47a248" },
+      { id: "postgres", name: "PostgreSQL",    icon: "SiPostgresql", col: "#336791" },
+      { id: "excel",    name: "Excel",         icon: "FiGrid",       col: "#217346" },
+      { id: "cleaning", name: "Data Cleaning", icon: "FiFilter",     col: "#0ea5a0" },
+      { id: "datavis",  name: "Data Viz",      icon: "FiBarChart2",  col: "#f59e0b" },
+    ],
+  },
+  {
+    id: "tools",
+    label: "Development Tools",
+    color: "#16a34a",
+    glow:  "rgba(22,163,74,0.55)",
+    cone:  "rgba(22,163,74,0.18)",
+    icons: [
+      { id: "git",     name: "Git",     icon: "SiGit",     col: "#f05032" },
+      { id: "github",  name: "GitHub",  icon: "SiGithub",  col: "#333333" },
+      { id: "vscode",  name: "VS Code", icon: "FiCode",    col: "#007acc" },
+      { id: "jupyter", name: "Jupyter", icon: "SiJupyter", col: "#f37626" },
+      { id: "docker",  name: "Docker",  icon: "SiDocker",  col: "#2496ed" },
+      { id: "postman", name: "Postman", icon: "SiPostman", col: "#ff6c37" },
+      { id: "linux",   name: "Linux",   icon: "SiLinux",   col: "#fcc624" },
+      { id: "n8n",     name: "n8n",     icon: "FiGitMerge",col: "#ea4b71" },
+    ],
+  },
+  {
+    id: "bi",
+    label: "Visualization",
+    color: "#d97706",
+    glow:  "rgba(217,119,6,0.55)",
+    cone:  "rgba(217,119,6,0.18)",
+    icons: [
+      { id: "tableau", name: "Tableau",  icon: "FiPieChart", col: "#e97627" },
+      { id: "powerbi", name: "Power BI", icon: "FiDatabase", col: "#f2c811" },
+    ],
+  },
 ];
 
-// ── Category accent map ───────────────────────────────────────────────────────
-const CAT_ACCENT = Object.fromEntries(techCategories.map((c) => [c.id, c.accent]));
-const CAT_COLOR  = Object.fromEntries(techCategories.map((c) => [c.id, c.color]));
+/* ── marquee ───────────────────────────────────────────────── */
+const MARQUEE = [
+  "Python","Machine Learning","TensorFlow","NLP","Generative AI",
+  "Flask","FastAPI","LangChain","SQL","PostgreSQL",
+  "Docker","Git","Jupyter","n8n","Power BI","Tableau",
+];
 
-// ── Category meta: icon + subtitle shown on cluster card header ───────────────
-const CAT_META = {
-  aidata:   { emoji: "🧠", subtitle: "Core ML, Python & intelligent models" },
-  backend:  { emoji: "⚡", subtitle: "APIs, LLMs & production AI services" },
-  database: { emoji: "🗄️",  subtitle: "Structured & unstructured data stores" },
-  tools:    { emoji: "🔧", subtitle: "Workflow, DevOps & productivity tools" },
-  bi:       { emoji: "📊", subtitle: "Dashboards, analytics & insights" },
+/* ── icon hover label ──────────────────────────────────────── */
+const labelV = {
+  hidden:  { opacity: 0, y: 6, scale: 0.9 },
+  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.16 } },
 };
 
-// ── Framer Motion variants ────────────────────────────────────────────────────
-const sectionVariants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.12, delayChildren: 0.05 } },
-};
+function FloatIcon({ item, index, platformColor, total, inView }) {
+  const [hovered, setHovered] = useState(false);
 
-const clusterVariants = {
-  hidden:  { opacity: 0, y: 40, scale: 0.94 },
-  visible: { opacity: 1, y: 0,  scale: 1,
-    transition: { type: "spring", stiffness: 200, damping: 22 } },
-};
+  /* arrange in a triangle / arc above the platform */
+  const cols = Math.ceil(Math.sqrt(total + 1));
+  const row  = Math.floor(index / cols);
+  const col  = index % cols;
+  const rowCount = Math.ceil(total / cols);
+  const xOffset  = (col - (cols - 1) / 2) * 68;
+  /* higher rows are visually higher (more negative y) */
+  const yBase    = -(row * 72) - 40;
+  /* slight depth scale: bottom row slightly bigger */
+  const depthScale = 0.82 + (rowCount - row) * 0.06;
 
-const pillVariants = {
-  hidden:  { opacity: 0, scale: 0.8 },
-  visible: (i) => ({
-    opacity: 1, scale: 1,
-    transition: { type: "spring", stiffness: 260, damping: 20, delay: i * 0.055 },
-  }),
-  exit: { opacity: 0, scale: 0.85, transition: { duration: 0.14 } },
-};
-
-const tooltipV = {
-  hidden:  { opacity: 0, y: 6, scale: 0.94 },
-  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.15 } },
-};
-
-// ── Single tech icon pill ─────────────────────────────────────────────────────
-function TechPill({ tech, index, accent, isMobileDevice }) {
-  const [active, setActive] = useState(false);
-
-  const toggle = useCallback(() => {
-    if (isMobileDevice) setActive((v) => !v);
-  }, [isMobileDevice]);
+  const floatDelay  = index * 0.08;
+  const floatOffset = (index % 3) * 1.4;  /* stagger float cycle */
 
   return (
     <motion.div
-      className={`te-pill${active ? " te-pill--active" : ""}`}
-      style={{ "--pill-accent": accent }}
-      custom={index}
-      variants={pillVariants}
-      onMouseEnter={() => !isMobileDevice && setActive(true)}
-      onMouseLeave={() => !isMobileDevice && setActive(false)}
-      onClick={toggle}
-      onFocus={() => setActive(true)}
-      onBlur={() => setActive(false)}
+      className="te-float-icon"
+      style={{
+        "--icon-col":   item.col,
+        "--icon-x":     `${xOffset}px`,
+        "--icon-y":     `${yBase}px`,
+        "--depth-scale": depthScale,
+        "--float-delay": `${floatOffset}s`,
+      }}
+      initial={{ opacity: 0, y: 40, scale: 0.5 }}
+      animate={inView
+        ? { opacity: 1, y: 0, scale: 1, transition: {
+            type: "spring", stiffness: 220, damping: 18,
+            delay: floatDelay + 0.35,
+          }}
+        : { opacity: 0, y: 40, scale: 0.5 }
+      }
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onFocus={() => setHovered(true)}
+      onBlur={() => setHovered(false)}
       tabIndex={0}
-      role="button"
-      aria-label={`${tech.name}: ${tech.desc}`}
+      role="img"
+      aria-label={item.name}
     >
-      <span className="te-pill__icon">
-        <TechIcon name={tech.icon} size={18} />
+      <span className="te-float-icon__bubble">
+        <Ico n={item.icon} s={22} />
       </span>
-      <span className="te-pill__name">{tech.name}</span>
 
       <AnimatePresence>
-        {active && (
-          <motion.div
-            className="te-tooltip"
-            variants={tooltipV}
+        {hovered && (
+          <motion.span
+            className="te-float-icon__label"
+            variants={labelV}
             initial="hidden"
             animate="visible"
             exit="hidden"
-            role="tooltip"
           >
-            <span className="te-tooltip__title">{tech.name}</span>
-            <span className="te-tooltip__desc">{tech.desc}</span>
-          </motion.div>
+            {item.name}
+          </motion.span>
         )}
       </AnimatePresence>
     </motion.div>
   );
 }
 
-// ── Cluster card: one per category ───────────────────────────────────────────
-function ClusterCard({ category, techs, isMobileDevice }) {
-  const accent = CAT_ACCENT[category.id] ?? "var(--primary)";
-  const meta   = CAT_META[category.id] ?? { emoji: "⚙️", subtitle: "" };
+/* ── single platform scene ─────────────────────────────────── */
+function Platform({ p, inView }) {
+  const iconCount = p.icons.length;
 
   return (
     <motion.div
-      className="te-cluster"
-      style={{ "--cluster-accent": accent }}
-      variants={clusterVariants}
-      layout
+      className="te-platform-scene"
+      style={{ "--p-color": p.color, "--p-glow": p.glow, "--p-cone": p.cone }}
+      initial={{ opacity: 0, y: 50 }}
+      animate={inView
+        ? { opacity: 1, y: 0, transition: { type: "spring", stiffness: 160, damping: 22, delay: 0.1 } }
+        : {}
+      }
     >
-      {/* Card header */}
-      <div className="te-cluster__head">
-        <span className="te-cluster__emoji" aria-hidden="true">{meta.emoji}</span>
-        <div className="te-cluster__title-group">
-          <h3 className="te-cluster__title">{category.label}</h3>
-          <p className="te-cluster__subtitle">{meta.subtitle}</p>
-        </div>
-        <span className="te-cluster__count">{techs.length}</span>
+      {/* floating icons above */}
+      <div className="te-platform-icons" aria-label={`${p.label} technologies`}>
+        {p.icons.map((item, i) => (
+          <FloatIcon
+            key={item.id}
+            item={item}
+            index={i}
+            platformColor={p.color}
+            total={iconCount}
+            inView={inView}
+          />
+        ))}
       </div>
 
-      {/* 3D platform base */}
-      <div className="te-cluster__stage" aria-hidden="true">
-        <div className="te-cluster__platform">
-          <div className="te-cluster__platform-top" />
-          <div className="te-cluster__platform-side" />
-          <div className="te-cluster__platform-glow" />
-        </div>
-      </div>
+      {/* light cone beam */}
+      <div className="te-platform-beam" aria-hidden="true" />
 
-      {/* Floating tech pills */}
-      <div className="te-cluster__pills" role="list">
-        <AnimatePresence mode="popLayout">
-          {techs.map((tech, i) => (
-            <TechPill
-              key={tech.id}
-              tech={tech}
-              index={i}
-              accent={accent}
-              isMobileDevice={isMobileDevice}
-            />
-          ))}
-        </AnimatePresence>
-      </div>
+      {/* 3D disc platform */}
+      <motion.div
+        className="te-platform-disc"
+        aria-hidden="true"
+        initial={{ scaleX: 0.2, opacity: 0 }}
+        animate={inView
+          ? { scaleX: 1, opacity: 1, transition: { duration: 0.6, ease: [0.22,1,0.36,1], delay: 0.1 } }
+          : {}
+        }
+      >
+        <div className="te-platform-disc__top" />
+        <div className="te-platform-disc__rim" />
+        <div className="te-platform-disc__glow" />
+        <div className="te-platform-disc__dot" />
+      </motion.div>
+
+      {/* label below platform */}
+      <motion.p
+        className="te-platform-label"
+        initial={{ opacity: 0, y: 8 }}
+        animate={inView
+          ? { opacity: 1, y: 0, transition: { delay: 0.55, duration: 0.4 } }
+          : {}
+        }
+      >
+        {p.label}
+      </motion.p>
     </motion.div>
   );
 }
 
-// ── Central AI + DATA hub ─────────────────────────────────────────────────────
-function Hub({ inView }) {
-  return (
-    <motion.div
-      className="te-hub"
-      initial={{ opacity: 0, scale: 0.6 }}
-      animate={inView ? { opacity: 1, scale: 1 } : {}}
-      transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
-      aria-label="AI + DATA — central theme"
-    >
-      {/* rings */}
-      <div className="te-hub__ring te-hub__ring--1" />
-      <div className="te-hub__ring te-hub__ring--2" />
-      <div className="te-hub__ring te-hub__ring--3" />
-      {/* glow */}
-      <div className="te-hub__glow" />
-      {/* disc */}
-      <div className="te-hub__disc">
-        <span className="te-hub__top">AI</span>
-        <span className="te-hub__plus">+</span>
-        <span className="te-hub__bottom">DATA</span>
-      </div>
-      {/* orbiting dots */}
-      <div className="te-hub__orbit te-hub__orbit--a"><div className="te-hub__dot" /></div>
-      <div className="te-hub__orbit te-hub__orbit--b"><div className="te-hub__dot te-hub__dot--violet" /></div>
-      <div className="te-hub__orbit te-hub__orbit--c"><div className="te-hub__dot te-hub__dot--lime" /></div>
-    </motion.div>
-  );
-}
-
-// ── Main export ───────────────────────────────────────────────────────────────
+/* ── main export ───────────────────────────────────────────── */
 export default function TechEcosystem() {
-  const [active,     setActive]     = useState("all");
-  const [isMobile,   setIsMobile]   = useState(
-    () => typeof window !== "undefined" && window.innerWidth <= 640
-  );
   const wrapRef = useRef(null);
-  const inView  = useInView(wrapRef, { once: true, margin: "-60px" });
-
-  // Track breakpoint
-  useEffect(() => {
-    const mq = window.matchMedia("(max-width: 640px)");
-    const cb = (e) => setIsMobile(e.matches);
-    mq.addEventListener("change", cb);
-    return () => mq.removeEventListener("change", cb);
-  }, []);
-
-  // Build visible category list (exclude "all")
-  const displayCats = useMemo(
-    () => techCategories.filter((c) => c.id !== "all"),
-    []
-  );
-
-  // Tech stacks per category
-  const byCategory = useMemo(() => {
-    const map = {};
-    displayCats.forEach((cat) => {
-      map[cat.id] = techStack.filter((t) => t.category === cat.id);
-    });
-    return map;
-  }, [displayCats]);
-
-  // Which clusters to show
-  const visibleCats = useMemo(() =>
-    active === "all" ? displayCats : displayCats.filter((c) => c.id === active),
-  [active, displayCats]);
-
-  // Tab handler
-  const handleTab = useCallback((id) => setActive(id), []);
+  const inView  = useInView(wrapRef, { once: true, margin: "-80px" });
 
   return (
     <div className="te-wrap" ref={wrapRef}>
 
-      {/* ── Hub ────────────────────────────────────────────────── */}
-      <div className="te-hub-row">
-        <Hub inView={inView} />
+      {/* ── 3D scene ─────────────────────────────────────────── */}
+      <div className="te-scene" aria-label="Technology skill platforms">
+        {PLATFORMS.map((p) => (
+          <Platform key={p.id} p={p} inView={inView} />
+        ))}
       </div>
 
-      {/* ── Category tabs ───────────────────────────────────────── */}
-      <motion.div
-        className="te-tabs-outer"
-        initial={{ opacity: 0, y: 16 }}
-        animate={inView ? { opacity: 1, y: 0 } : {}}
-        transition={{ delay: 0.3, duration: 0.45 }}
-      >
-        <div className="te-tabs" role="tablist" aria-label="Filter by technology category">
-          {techCategories.map((cat) => (
-            <button
-              key={cat.id}
-              className={`te-tab${active === cat.id ? " te-tab--active" : ""}`}
-              style={{ "--tab-accent": cat.accent }}
-              role="tab"
-              aria-selected={active === cat.id}
-              onClick={() => handleTab(cat.id)}
-            >
-              {cat.label}
-              {active === cat.id && (
-                <motion.span
-                  className="te-tab__underline"
-                  layoutId="te-tab-ul"
-                  style={{ background: cat.accent }}
-                  transition={{ type: "spring", stiffness: 380, damping: 32 }}
-                />
-              )}
-            </button>
-          ))}
-        </div>
-      </motion.div>
-
-      {/* ── Cluster grid ────────────────────────────────────────── */}
-      <motion.div
-        className={`te-grid te-grid--${visibleCats.length === 1 ? "single" : visibleCats.length <= 3 ? "few" : "all"}`}
-        variants={sectionVariants}
-        initial="hidden"
-        animate={inView ? "visible" : "hidden"}
-        layout
-      >
-        <AnimatePresence mode="popLayout">
-          {visibleCats.map((cat) => (
-            <ClusterCard
-              key={cat.id}
-              category={cat}
-              techs={byCategory[cat.id] ?? []}
-              isMobileDevice={isMobile}
-            />
-          ))}
-        </AnimatePresence>
-      </motion.div>
-
-      {/* ── Marquee strip ───────────────────────────────────────── */}
+      {/* ── marquee strip ────────────────────────────────────── */}
       <motion.div
         className="te-strip"
         initial={{ opacity: 0 }}
-        animate={inView ? { opacity: 1 } : {}}
-        transition={{ delay: 0.7, duration: 0.5 }}
+        animate={inView ? { opacity: 1, transition: { delay: 1.2, duration: 0.6 } } : {}}
         aria-label="Core technologies"
       >
         <span className="te-strip__label">Core Stack</span>
