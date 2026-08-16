@@ -200,7 +200,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 16px;
+  padding: 9px 15px;
   border-radius: 14px;
   border: 1.5px solid var(--card-line);
   background: var(--card);
@@ -213,7 +213,7 @@
     opacity      200ms ease,
     transform    200ms ease;
   user-select: none;
-  backdrop-filter: blur(4px);
+  will-change: opacity, transform;
 }
 
 .te-pill:focus-visible {
@@ -270,12 +270,9 @@
   border-radius: 12px;
   background: var(--surface);
   border: 1px solid var(--card-line);
-  box-shadow:
-    0 12px 32px color-mix(in srgb, var(--pill-accent) 18%, transparent),
-    0 4px 12px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.14);
   z-index: 100;
   pointer-events: none;
-  backdrop-filter: blur(10px);
 }
 
 /* Tooltip arrow */
@@ -397,53 +394,49 @@
   .te-core__disc { width: 92px; height: 92px; }
   .te-core__label-top,
   .te-core__label-bottom { font-size: 0.9rem; }
-
   .te-tabs { gap: 6px; }
   .te-tab  { padding: 7px 14px; font-size: 0.71rem; }
-
   .te-pill { padding: 8px 13px; }
   .te-pill__name { font-size: 0.73rem; }
 }
 
-/* Mobile  ≤ 480px */
-@media (max-width: 480px) {
-  .te-wrap { gap: 28px; }
+/* Mobile  ≤ 640px — performance-first */
+@media (max-width: 640px) {
+  .te-wrap { gap: 24px; }
 
-  .te-core { width: 120px; height: 120px; }
-  .te-core__ring--1 { width: 120px; height: 120px; }
-  .te-core__ring--2 { width: 90px;  height: 90px;  }
-  .te-core__ring--3 { width: 155px; height: 155px; }
-  .te-core__orbit--a { width: 120px; height: 120px; }
-  .te-core__orbit--b { width: 90px;  height: 90px;  }
-  .te-core__orbit--c { width: 155px; height: 155px; }
-  .te-core__disc { width: 74px; height: 74px; }
-  .te-core__label-top,
-  .te-core__label-bottom { font-size: 0.76rem; }
-  .te-core__plus { font-size: 0.55rem; }
+  /* Hide orb entirely on mobile — saves ~6 spinning elements */
+  .te-core { display: none; }
 
-  .te-tabs  { gap: 5px; }
-  .te-tab   { padding: 7px 11px; font-size: 0.68rem; }
-
-  .te-grid  { gap: 8px; }
-  .te-pill  { padding: 7px 11px; }
-  .te-pill__name { font-size: 0.69rem; }
-
-  /* On small screens tooltip shows below pill instead of above */
-  .te-tooltip {
-    bottom: auto;
-    top: calc(100% + 8px);
-    min-width: 170px;
-    max-width: 220px;
+  /* Tabs scroll horizontally instead of wrapping */
+  .te-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    justify-content: flex-start;
+    padding-bottom: 4px;
+    gap: 6px;
+    /* hide scrollbar */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
-  .te-tooltip::after {
-    top: auto;
-    bottom: 100%;
-    border-top-color: transparent;
-    border-bottom-color: var(--card-line);
+  .te-tabs::-webkit-scrollbar { display: none; }
+  .te-tab { padding: 7px 13px; font-size: 0.7rem; white-space: nowrap; flex-shrink: 0; }
+
+  /* Pills smaller on mobile */
+  .te-grid  { gap: 7px; }
+  .te-pill  { padding: 7px 11px; border-radius: 10px; }
+  .te-pill__icon { display: none; }
+  .te-pill__name { font-size: 0.72rem; }
+
+  /* No glow/transform on mobile — just border change */
+  .te-pill--active {
+    border-color: color-mix(in srgb, var(--pill-accent) 65%, var(--card-line));
+    background: color-mix(in srgb, var(--pill-accent) 10%, var(--card));
+    box-shadow: none;
+    transform: none;
   }
 
   .te-strip__label { display: none; }
-  .te-strip { padding-top: 20px; }
+  .te-strip { padding-top: 18px; }
 }
 
 /* Reduced motion */

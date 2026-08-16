@@ -1,63 +1,51 @@
 // Category accent colors map to portfolio CSS variables
 export const techCategories = [
-  { id: "all",        label: "All",            accent: "var(--primary)" },
-  { id: "ai",         label: "AI & Data",      accent: "var(--primary)" },
-  { id: "backend",    label: "Backend",        accent: "var(--violet)" },
-  { id: "frontend",   label: "Frontend",       accent: "#1599aa" },
-  { id: "database",   label: "Database",       accent: "#e05a2b" },
-  { id: "tools",      label: "Tools & DevOps", accent: "var(--lime)" },
-  { id: "bi",         label: "Visualization",  accent: "#d97706" },
+  { id: "all",      label: "All",             accent: "var(--primary)" },
+  { id: "aiml",     label: "AI / ML & Apps",  accent: "var(--primary)" },
+  { id: "database", label: "Database",        accent: "#e05a2b" },
+  { id: "tools",    label: "Tools & DevOps",  accent: "var(--lime)" },
+  { id: "bi",       label: "Visualization",   accent: "#d97706" },
 ];
 
 export const techStack = [
-  // ── AI & Data Science ──────────────────────────────────────────────────────
-  { id: "python",      name: "Python",              category: "ai",       icon: "SiPython",          desc: "Primary language for data science, ML pipelines and automation" },
-  { id: "pandas",      name: "Pandas",              category: "ai",       icon: "SiPandas",          desc: "Data manipulation, cleaning and analysis at every scale" },
-  { id: "numpy",       name: "NumPy",               category: "ai",       icon: "SiNumpy",           desc: "Numerical computing and array operations" },
-  { id: "sklearn",     name: "Scikit-learn",        category: "ai",       icon: "SiScikitlearn",     desc: "Classical machine learning models and evaluation pipelines" },
-  { id: "tf",          name: "TensorFlow",          category: "ai",       icon: "SiTensorflow",      desc: "Deep learning model building and training" },
-  { id: "ml",          name: "Machine Learning",    category: "ai",       icon: "FiBriefcase",       desc: "End-to-end ML workflows from feature engineering to deployment" },
-  { id: "nlp",         name: "NLP",                 category: "ai",       icon: "FiMessageCircle",   desc: "Text processing, tokenisation and language model applications" },
-  { id: "genai",       name: "Generative AI",       category: "ai",       icon: "FiCpu",             desc: "LLM integration, prompt engineering and AI-powered features" },
-  { id: "sql",         name: "SQL",                 category: "ai",       icon: "SiMysql",           desc: "Data querying, analysis and database management" },
-
-  // ── Backend & AI Apps ──────────────────────────────────────────────────────
-  { id: "flask",       name: "Flask",               category: "backend",  icon: "SiFlask",           desc: "Lightweight Python web framework for ML APIs and prototypes" },
-  { id: "fastapi",     name: "FastAPI",             category: "backend",  icon: "SiFastapi",         desc: "High-performance async Python API framework" },
-  { id: "restapi",     name: "REST API",            category: "backend",  icon: "FiCloud",           desc: "Designing and consuming RESTful interfaces" },
-  { id: "langchain",   name: "LangChain",           category: "backend",  icon: "FiLink",            desc: "Building LLM chains, agents and retrieval-augmented apps" },
-  { id: "spacy",       name: "spaCy",               category: "backend",  icon: "FiFeather",         desc: "Industrial-strength NLP pipelines and entity recognition" },
-  { id: "sentrans",    name: "Sentence Trans.",      category: "backend",  icon: "FiLayers",          desc: "Semantic similarity and embedding-based retrieval" },
-
-  // ── Frontend ──────────────────────────────────────────────────────────────
-  { id: "react",       name: "React",               category: "frontend", icon: "SiReact",           desc: "Building interactive UIs and single-page applications" },
-  { id: "js",          name: "JavaScript",          category: "frontend", icon: "SiJavascript",      desc: "Core web scripting for dynamic behaviour and logic" },
-  { id: "html",        name: "HTML5",               category: "frontend", icon: "SiHtml5",           desc: "Semantic markup and accessible document structure" },
-  { id: "css",        name: "CSS3",                category: "frontend", icon: "SiCss",             desc: "Styling, layout systems and responsive design" },
-  { id: "bootstrap",   name: "Bootstrap",           category: "frontend", icon: "SiBootstrap",       desc: "Rapid UI development with a utility-first grid system" },
-  { id: "vite",        name: "Vite",                category: "frontend", icon: "SiVite",            desc: "Lightning-fast build tooling and dev server" },
+  // ── AI / ML & Apps (merged ai + backend) ──────────────────────────────────
+  { id: "python",    name: "Python",           category: "aiml",     icon: "SiPython",        desc: "Primary language for data science, ML pipelines and automation" },
+  { id: "pandas",    name: "Pandas",           category: "aiml",     icon: "SiPandas",        desc: "Data manipulation, cleaning and analysis at every scale" },
+  { id: "numpy",     name: "NumPy",            category: "aiml",     icon: "SiNumpy",         desc: "Numerical computing and array operations" },
+  { id: "sklearn",   name: "Scikit-learn",     category: "aiml",     icon: "SiScikitlearn",   desc: "Classical machine learning models and evaluation pipelines" },
+  { id: "tf",        name: "TensorFlow",       category: "aiml",     icon: "SiTensorflow",    desc: "Deep learning model building and training" },
+  { id: "ml",        name: "Machine Learning", category: "aiml",     icon: "FiBriefcase",     desc: "End-to-end ML workflows from feature engineering to deployment" },
+  { id: "nlp",       name: "NLP",              category: "aiml",     icon: "FiMessageCircle", desc: "Text processing, tokenisation and language model applications" },
+  { id: "genai",     name: "Generative AI",    category: "aiml",     icon: "FiCpu",           desc: "LLM integration, prompt engineering and AI-powered features" },
+  { id: "sql",       name: "SQL",              category: "aiml",     icon: "SiMysql",         desc: "Data querying, analysis and database management" },
+  { id: "flask",     name: "Flask",            category: "aiml",     icon: "SiFlask",         desc: "Lightweight Python web framework for ML APIs and prototypes" },
+  { id: "fastapi",   name: "FastAPI",          category: "aiml",     icon: "SiFastapi",       desc: "High-performance async Python API framework" },
+  { id: "restapi",   name: "REST API",         category: "aiml",     icon: "FiCloud",         desc: "Designing and consuming RESTful interfaces" },
+  { id: "langchain", name: "LangChain",        category: "aiml",     icon: "FiLink",          desc: "Building LLM chains, agents and retrieval-augmented apps" },
+  { id: "spacy",     name: "spaCy",            category: "aiml",     icon: "FiFeather",       desc: "Industrial-strength NLP pipelines and entity recognition" },
+  { id: "sentrans",  name: "Sentence Trans.",  category: "aiml",     icon: "FiLayers",        desc: "Semantic similarity and embedding-based retrieval" },
 
   // ── Database & Data ────────────────────────────────────────────────────────
-  { id: "mysql",       name: "MySQL",               category: "database", icon: "SiMysql",           desc: "Relational database design, querying and optimisation" },
-  { id: "mongodb",     name: "MongoDB",             category: "database", icon: "SiMongodb",         desc: "Document-oriented NoSQL for flexible data structures" },
-  { id: "postgres",    name: "PostgreSQL",          category: "database", icon: "SiPostgresql",      desc: "Advanced open-source relational database" },
-  { id: "excel",       name: "Excel",               category: "database", icon: "FiGrid",            desc: "Data cleaning, pivot analysis and business reporting" },
-  { id: "cleaning",    name: "Data Cleaning",       category: "database", icon: "FiFilter",          desc: "Handling missing values, outliers and inconsistencies" },
-  { id: "datavis",     name: "Data Visualization",  category: "database", icon: "FiBarChart2",       desc: "Turning raw data into clear, communicative charts" },
+  { id: "mysql",     name: "MySQL",            category: "database", icon: "SiMysql",         desc: "Relational database design, querying and optimisation" },
+  { id: "mongodb",   name: "MongoDB",          category: "database", icon: "SiMongodb",       desc: "Document-oriented NoSQL for flexible data structures" },
+  { id: "postgres",  name: "PostgreSQL",       category: "database", icon: "SiPostgresql",    desc: "Advanced open-source relational database" },
+  { id: "excel",     name: "Excel",            category: "database", icon: "FiGrid",          desc: "Data cleaning, pivot analysis and business reporting" },
+  { id: "cleaning",  name: "Data Cleaning",    category: "database", icon: "FiFilter",        desc: "Handling missing values, outliers and inconsistencies" },
+  { id: "datavis",   name: "Data Viz",         category: "database", icon: "FiBarChart2",     desc: "Turning raw data into clear, communicative charts" },
 
   // ── Tools & DevOps ─────────────────────────────────────────────────────────
-  { id: "git",         name: "Git",                 category: "tools",    icon: "SiGit",             desc: "Version control, branching strategies and collaboration" },
-  { id: "github",      name: "GitHub",              category: "tools",    icon: "SiGithub",          desc: "Code hosting, pull requests and CI/CD workflows" },
-  { id: "vscode",      name: "VS Code",             category: "tools",    icon: "FiCode",            desc: "Primary development environment with custom tooling" },
-  { id: "jupyter",     name: "Jupyter",             category: "tools",    icon: "SiJupyter",         desc: "Interactive notebooks for exploration and reporting" },
-  { id: "docker",      name: "Docker",              category: "tools",    icon: "SiDocker",          desc: "Containerisation for reproducible ML environments" },
-  { id: "postman",     name: "Postman",             category: "tools",    icon: "SiPostman",         desc: "API testing, documentation and workflow automation" },
-  { id: "linux",       name: "Linux",               category: "tools",    icon: "SiLinux",           desc: "Command-line proficiency and server environment work" },
-  { id: "n8n",         name: "n8n",                 category: "tools",    icon: "FiGitMerge",        desc: "No-code/low-code workflow automation and integrations" },
+  { id: "git",       name: "Git",              category: "tools",    icon: "SiGit",           desc: "Version control, branching strategies and collaboration" },
+  { id: "github",    name: "GitHub",           category: "tools",    icon: "SiGithub",        desc: "Code hosting, pull requests and CI/CD workflows" },
+  { id: "vscode",    name: "VS Code",          category: "tools",    icon: "FiCode",          desc: "Primary development environment with custom tooling" },
+  { id: "jupyter",   name: "Jupyter",          category: "tools",    icon: "SiJupyter",       desc: "Interactive notebooks for exploration and reporting" },
+  { id: "docker",    name: "Docker",           category: "tools",    icon: "SiDocker",        desc: "Containerisation for reproducible ML environments" },
+  { id: "postman",   name: "Postman",          category: "tools",    icon: "SiPostman",       desc: "API testing, documentation and workflow automation" },
+  { id: "linux",     name: "Linux",            category: "tools",    icon: "SiLinux",         desc: "Command-line proficiency and server environment work" },
+  { id: "n8n",       name: "n8n",              category: "tools",    icon: "FiGitMerge",      desc: "No-code/low-code workflow automation and integrations" },
 
   // ── BI / Visualization ─────────────────────────────────────────────────────
-  { id: "tableau",     name: "Tableau",             category: "bi",       icon: "FiPieChart",        desc: "Interactive dashboards and business intelligence reporting" },
-  { id: "powerbi",     name: "Power BI",            category: "bi",       icon: "FiDatabase",        desc: "Microsoft BI platform for data modelling and visual analytics" },
+  { id: "tableau",   name: "Tableau",          category: "bi",       icon: "FiPieChart",      desc: "Interactive dashboards and business intelligence reporting" },
+  { id: "powerbi",   name: "Power BI",         category: "bi",       icon: "FiDatabase",      desc: "Microsoft BI platform for data modelling and visual analytics" },
 ];
 
 // Legacy default export – keeps existing import in App.jsx working
