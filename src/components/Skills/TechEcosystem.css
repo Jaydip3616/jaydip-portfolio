@@ -1,0 +1,458 @@
+/* ═══════════════════════════════════════════════════════════════
+   TechEcosystem — Skills Section
+   Uses portfolio CSS variables: --primary, --violet, --lime,
+   --canvas, --card, --ink, --muted, --line, --card-line, --surface
+═══════════════════════════════════════════════════════════════ */
+
+/* ── Wrapper ──────────────────────────────────────────────────── */
+.te-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+/* ── Header row: orb + tabs ───────────────────────────────────── */
+.te-header-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 36px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   CORE ORB
+══════════════════════════════════════════════════════════════ */
+.te-core {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+/* Rings */
+.te-core__ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--primary) 30%, transparent);
+  pointer-events: none;
+}
+.te-core__ring--1 { width: 180px; height: 180px; animation: te-spin 18s linear infinite; }
+.te-core__ring--2 { width: 140px; height: 140px; border-color: color-mix(in srgb, var(--violet) 25%, transparent); animation: te-spin 12s linear infinite reverse; }
+.te-core__ring--3 { width: 220px; height: 220px; border-color: color-mix(in srgb, var(--primary) 14%, transparent); animation: te-spin 24s linear infinite; }
+
+/* Glow */
+.te-core__glow {
+  position: absolute;
+  inset: 20px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--primary) 28%, transparent) 0%,
+    color-mix(in srgb, var(--violet) 18%, transparent) 50%,
+    transparent 75%
+  );
+  filter: blur(14px);
+  animation: te-breathe 4s ease-in-out infinite;
+}
+
+/* Disc */
+.te-core__disc {
+  position: relative;
+  z-index: 2;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--primary) 22%, var(--card)),
+    color-mix(in srgb, var(--violet) 28%, var(--card))
+  );
+  border: 1.5px solid color-mix(in srgb, var(--primary) 45%, var(--card-line));
+  box-shadow:
+    0 0 0 6px color-mix(in srgb, var(--primary) 8%, transparent),
+    0 12px 36px color-mix(in srgb, var(--violet) 22%, transparent);
+}
+
+.te-core__label-top,
+.te-core__label-bottom {
+  font-family: "Space Grotesk", "Manrope", sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  line-height: 1;
+}
+.te-core__label-top  { color: var(--primary); }
+.te-core__label-bottom { color: var(--violet); }
+.te-core__plus {
+  font-size: 0.65rem;
+  color: var(--muted);
+  font-family: "DM Mono", monospace;
+  line-height: 1;
+}
+
+/* Orbiting dots */
+.te-core__orbit {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.te-core__orbit--a { width: 180px; height: 180px; animation: te-spin 7s linear infinite; }
+.te-core__orbit--b { width: 140px; height: 140px; animation: te-spin 11s linear infinite reverse; }
+.te-core__orbit--c { width: 220px; height: 220px; animation: te-spin 15s linear infinite; }
+
+.te-core__dot {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--primary);
+  box-shadow: 0 0 6px 2px color-mix(in srgb, var(--primary) 55%, transparent);
+}
+.te-core__dot--violet {
+  background: var(--violet);
+  box-shadow: 0 0 6px 2px color-mix(in srgb, var(--violet) 55%, transparent);
+}
+.te-core__dot--lime {
+  background: var(--lime);
+  box-shadow: 0 0 6px 2px color-mix(in srgb, var(--lime) 55%, transparent);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   CATEGORY TABS
+══════════════════════════════════════════════════════════════ */
+.te-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.te-tab {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 9px 18px;
+  border-radius: 999px;
+  border: 1.5px solid var(--card-line);
+  background: var(--card);
+  color: var(--muted);
+  font-family: "Space Grotesk", "Manrope", sans-serif;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: color 180ms ease, border-color 180ms ease, background 180ms ease, transform 180ms ease;
+  overflow: hidden;
+}
+
+.te-tab:hover {
+  color: var(--ink);
+  border-color: color-mix(in srgb, var(--tab-accent, var(--primary)) 50%, var(--card-line));
+  background: color-mix(in srgb, var(--tab-accent, var(--primary)) 8%, var(--card));
+  transform: translateY(-2px);
+}
+
+.te-tab--active {
+  color: var(--ink);
+  border-color: color-mix(in srgb, var(--tab-accent, var(--primary)) 60%, var(--card-line));
+  background: color-mix(in srgb, var(--tab-accent, var(--primary)) 10%, var(--card));
+}
+
+.te-tab__bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2.5px;
+  border-radius: 999px;
+}
+
+.te-tab:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   TECH PILL GRID
+══════════════════════════════════════════════════════════════ */
+.te-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  min-height: 200px;
+}
+
+/* ── Single pill ────────────────────────────────────────────── */
+.te-pill {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 14px;
+  border: 1.5px solid var(--card-line);
+  background: var(--card);
+  color: var(--ink);
+  cursor: default;
+  transition:
+    border-color 200ms ease,
+    background   200ms ease,
+    box-shadow   200ms ease,
+    opacity      200ms ease,
+    transform    200ms ease;
+  user-select: none;
+  backdrop-filter: blur(4px);
+}
+
+.te-pill:focus-visible {
+  outline: 2px solid var(--pill-accent, var(--primary));
+  outline-offset: 2px;
+}
+
+/* Dim state */
+.te-pill--dim {
+  opacity: 0.32;
+  filter: grayscale(0.4);
+}
+
+/* Active / hovered */
+.te-pill--active {
+  border-color: color-mix(in srgb, var(--pill-accent) 65%, var(--card-line));
+  background: color-mix(in srgb, var(--pill-accent) 10%, var(--card));
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--pill-accent) 14%, transparent),
+    0 8px 22px color-mix(in srgb, var(--pill-accent) 20%, transparent);
+  transform: translateY(-3px) scale(1.04);
+  z-index: 10;
+}
+
+.te-pill__icon {
+  display: flex;
+  align-items: center;
+  color: var(--pill-accent, var(--primary));
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  transition: transform 200ms ease;
+}
+.te-pill--active .te-pill__icon {
+  transform: scale(1.15) rotate(-5deg);
+}
+
+.te-pill__name {
+  font-family: "Space Grotesk", "Manrope", sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+/* ── Tooltip ────────────────────────────────────────────────── */
+.te-tooltip {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 200px;
+  max-width: 260px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--surface);
+  border: 1px solid var(--card-line);
+  box-shadow:
+    0 12px 32px color-mix(in srgb, var(--pill-accent) 18%, transparent),
+    0 4px 12px rgba(0, 0, 0, 0.12);
+  z-index: 100;
+  pointer-events: none;
+  backdrop-filter: blur(10px);
+}
+
+/* Tooltip arrow */
+.te-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--card-line);
+}
+
+.te-tooltip__name {
+  display: block;
+  font-family: "Space Grotesk", "Manrope", sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--pill-accent, var(--primary));
+  margin-bottom: 5px;
+}
+
+.te-tooltip__desc {
+  display: block;
+  font-size: 0.73rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   CORE TECH STRIP  (marquee)
+══════════════════════════════════════════════════════════════ */
+.te-strip {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  overflow: hidden;
+  border-top: 1px solid var(--line);
+  padding-top: 28px;
+}
+
+.te-strip__label {
+  font-family: "DM Mono", monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--primary);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.te-strip__track {
+  flex: 1;
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+}
+
+.te-strip__inner {
+  display: flex;
+  width: max-content;
+  animation: te-marquee 32s linear infinite;
+}
+
+.te-strip:hover .te-strip__inner {
+  animation-play-state: paused;
+}
+
+.te-strip__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  font-family: "Space Grotesk", "Manrope", sans-serif;
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  white-space: nowrap;
+  transition: color 200ms ease;
+}
+.te-strip__item:hover { color: var(--primary); }
+
+.te-strip__dot {
+  color: var(--lime);
+  font-size: 0.6em;
+  opacity: 0.8;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   KEYFRAMES
+══════════════════════════════════════════════════════════════ */
+@keyframes te-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes te-breathe {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50%       { opacity: 1;   transform: scale(1.12); }
+}
+
+@keyframes te-marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════════════════════════ */
+
+/* Tablet  ≤ 800px */
+@media (max-width: 800px) {
+  .te-core { width: 150px; height: 150px; }
+  .te-core__ring--1 { width: 150px; height: 150px; }
+  .te-core__ring--2 { width: 115px; height: 115px; }
+  .te-core__ring--3 { width: 185px; height: 185px; }
+  .te-core__orbit--a { width: 150px; height: 150px; }
+  .te-core__orbit--b { width: 115px; height: 115px; }
+  .te-core__orbit--c { width: 185px; height: 185px; }
+  .te-core__disc { width: 92px; height: 92px; }
+  .te-core__label-top,
+  .te-core__label-bottom { font-size: 0.9rem; }
+
+  .te-tabs { gap: 6px; }
+  .te-tab  { padding: 7px 14px; font-size: 0.71rem; }
+
+  .te-pill { padding: 8px 13px; }
+  .te-pill__name { font-size: 0.73rem; }
+}
+
+/* Mobile  ≤ 480px */
+@media (max-width: 480px) {
+  .te-wrap { gap: 28px; }
+
+  .te-core { width: 120px; height: 120px; }
+  .te-core__ring--1 { width: 120px; height: 120px; }
+  .te-core__ring--2 { width: 90px;  height: 90px;  }
+  .te-core__ring--3 { width: 155px; height: 155px; }
+  .te-core__orbit--a { width: 120px; height: 120px; }
+  .te-core__orbit--b { width: 90px;  height: 90px;  }
+  .te-core__orbit--c { width: 155px; height: 155px; }
+  .te-core__disc { width: 74px; height: 74px; }
+  .te-core__label-top,
+  .te-core__label-bottom { font-size: 0.76rem; }
+  .te-core__plus { font-size: 0.55rem; }
+
+  .te-tabs  { gap: 5px; }
+  .te-tab   { padding: 7px 11px; font-size: 0.68rem; }
+
+  .te-grid  { gap: 8px; }
+  .te-pill  { padding: 7px 11px; }
+  .te-pill__name { font-size: 0.69rem; }
+
+  /* On small screens tooltip shows below pill instead of above */
+  .te-tooltip {
+    bottom: auto;
+    top: calc(100% + 8px);
+    min-width: 170px;
+    max-width: 220px;
+  }
+  .te-tooltip::after {
+    top: auto;
+    bottom: 100%;
+    border-top-color: transparent;
+    border-bottom-color: var(--card-line);
+  }
+
+  .te-strip__label { display: none; }
+  .te-strip { padding-top: 20px; }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .te-core__ring,
+  .te-core__orbit,
+  .te-core__glow,
+  .te-strip__inner {
+    animation: none !important;
+  }
+  .te-pill--active { transform: none; }
+}

@@ -20,6 +20,7 @@ import {
   FiX,
 } from "react-icons/fi";
 import { FaGithub } from "react-icons/fa";
+import TechEcosystem from "./components/Skills/TechEcosystem";
 import "./App.css";
 import profilePhoto from "./assets/Jaydip-photo.jpg";
 import SplashScreen from "./components/Common/SplashScreen";
@@ -273,8 +274,16 @@ function App() {
         <section id="skills" className="section surface-section">
           <div className="container">
             <SectionIntro number="03 / Expertise" eyebrow="What I work with" title="Tools for turning data into direction." />
-            <div className="skills-grid">
-              {skills.map((skill, index) => <article className="skill-card reveal" style={{ "--delay": `${index * 90}ms` }} key={skill.id}><span className="card-index">0{index + 1}</span><h3>{skill.title}</h3><p>{skill.description}</p><ul>{skill.technologies.map((tech) => <li key={tech}><FiCheck /> {tech}</li>)}</ul></article>)}
+            <TechEcosystem />
+            <div className="skills-grid skills-grid--detail">
+              {skills.map((skill, index) => (
+                <article className="skill-card reveal" style={{ "--delay": `${index * 90}ms` }} key={skill.id}>
+                  <span className="card-index">0{index + 1}</span>
+                  <h3>{skill.title}</h3>
+                  <p>{skill.description}</p>
+                  <ul>{skill.technologies.map((tech) => <li key={tech}><FiCheck /> {tech}</li>)}</ul>
+                </article>
+              ))}
             </div>
           </div>
         </section>
