@@ -129,6 +129,14 @@
 }
 
 /* ══════════════════════════════════════════════════════════════
+   CATEGORY TABS WRAPPER
+   Sits outside te-header-row so it can scroll full-width on mobile
+══════════════════════════════════════════════════════════════ */
+.te-tabs-wrap {
+  width: 100%;
+}
+
+/* ══════════════════════════════════════════════════════════════
    CATEGORY TABS
 ══════════════════════════════════════════════════════════════ */
 .te-tabs {
@@ -402,81 +410,70 @@
 
 /* Mobile  ≤ 640px */
 @media (max-width: 640px) {
-  .te-wrap { gap: 28px; }
+  .te-wrap { gap: 24px; }
 
-  /* Orb — smaller but still visible with animation */
-  .te-core {
-    width: 140px;
-    height: 140px;
-  }
-  /* Keep ring-1 spinning at correct size */
-  .te-core__ring--1 { width: 140px; height: 140px; animation-duration: 22s; }
-  /* Hide the heavier rings */
+  /* ── Orb: smaller, 1 ring only ─────────────────────────────── */
+  .te-core { width: 140px; height: 140px; }
+  .te-core__ring--1 { width: 140px; height: 140px; animation-duration: 20s; }
   .te-core__ring--2 { display: none; }
   .te-core__ring--3 { display: none; }
-  /* Hide orbiting dots — main lag source */
-  .te-core__orbit { display: none; }
-  /* Softer glow */
-  .te-core__glow {
-    inset: 16px;
-    filter: blur(10px);
-    animation-duration: 6s;
-  }
-  .te-core__disc {
-    width: 90px;
-    height: 90px;
-    transform: translateZ(0);
-  }
-  .te-core__label-top,
-  .te-core__label-bottom { font-size: 0.85rem; }
-  .te-core__plus         { font-size: 0.55rem; }
 
-  /* Tabs — horizontal scroll with padding so first/last tabs aren't clipped */
-  .te-tabs {
-    flex-wrap: nowrap;
+  /* Orbits: resize to match new orb size — keep dots spinning */
+  .te-core__orbit--a { width: 140px; height: 140px; }
+  .te-core__orbit--b { width: 108px; height: 108px; }
+  .te-core__orbit--c { display: none; } /* only 2 dots on mobile */
+
+  .te-core__glow { inset: 14px; filter: blur(10px); animation-duration: 5s; }
+  /* NO transform: translateZ on disc — it breaks orbit stacking context */
+  .te-core__disc { width: 88px; height: 88px; }
+  .te-core__label-top,
+  .te-core__label-bottom { font-size: 0.82rem; }
+  .te-core__plus { font-size: 0.52rem; }
+
+  /* ── Tabs: full-width horizontal scroll ────────────────────── */
+  .te-tabs-wrap {
+    /* bleed to container edges so scroll starts from true edge */
+    margin: 0 -24px;
+    padding: 0 24px;
     overflow-x: auto;
-    justify-content: flex-start;
-    /* left/right padding ensures All and last tab are fully visible */
-    padding: 0 4px 6px 4px;
-    gap: 7px;
     scrollbar-width: none;
     -ms-overflow-style: none;
-    /* extend clickable area to edges */
-    margin: 0 -4px;
   }
-  .te-tabs::-webkit-scrollbar { display: none; }
+  .te-tabs-wrap::-webkit-scrollbar { display: none; }
+
+  .te-tabs {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 8px;
+    /* right padding so last tab isn't flush to edge */
+    padding-right: 24px;
+    width: max-content;
+    min-width: 100%;
+  }
+
   .te-tab {
     padding: 8px 16px;
-    font-size: 0.72rem;
+    font-size: 0.73rem;
     white-space: nowrap;
     flex-shrink: 0;
-    /* ensure active tab indicator isn't clipped */
-    overflow: visible;
   }
 
-  /* Pills */
-  .te-grid { gap: 8px; }
-  .te-pill {
-    padding: 8px 12px;
-    border-radius: 12px;
-    gap: 7px;
-  }
+  /* ── Pills ─────────────────────────────────────────────────── */
+  .te-grid  { gap: 8px; }
+  .te-pill  { padding: 8px 12px; border-radius: 12px; gap: 7px; }
   .te-pill__icon { font-size: 1rem; }
   .te-pill__name { font-size: 0.72rem; }
-
-  /* Active pill on mobile */
   .te-pill--active {
     transform: translateY(-2px) scale(1.02);
     box-shadow: 0 4px 12px color-mix(in srgb, var(--pill-accent) 22%, transparent);
   }
 
-  /* Tooltip on mobile — show below the pill so it doesn't get clipped */
+  /* ── Tooltip: show below pill on mobile ────────────────────── */
   .te-tooltip {
     bottom: auto;
     top: calc(100% + 8px);
     min-width: 160px;
-    max-width: 230px;
-    font-size: 0.7rem;
+    max-width: 220px;
   }
   .te-tooltip::after {
     top: auto;
@@ -485,10 +482,10 @@
     border-bottom-color: var(--card-line);
   }
 
-  /* Strip */
-  .te-strip { padding-top: 20px; }
+  /* ── Strip ─────────────────────────────────────────────────── */
+  .te-strip { padding-top: 18px; }
   .te-strip__label { display: none; }
-  .te-strip__item { font-size: 0.72rem; gap: 10px; }
+  .te-strip__item { font-size: 0.71rem; gap: 10px; }
 }
 
 /* Reduced motion */

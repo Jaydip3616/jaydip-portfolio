@@ -187,15 +187,20 @@ export default function TechEcosystem() {
   return (
     <div className="te-wrap" ref={sectionRef}>
 
-      {/* ── Orb + tabs ─────────────────────────────────────────── */}
+      {/* ── Orb ───────────────────────────────────────────────────── */}
       <div className="te-header-row">
         <CoreOrb inView={inView} mobile={mobile} />
+      </div>
 
-        <motion.div
+      {/* ── Tabs — full width row, outside header-row so it can scroll freely */}
+      <motion.div
+        className="te-tabs-wrap"
+        initial={{ opacity: 0, y: 14 }}
+        animate={inView ? { opacity: 1, y: 0 } : {}}
+        transition={{ delay: 0.25, duration: 0.45 }}
+      >
+        <div
           className="te-tabs"
-          initial={{ opacity: 0, y: 14 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.25, duration: 0.45 }}
           role="tablist"
           aria-label="Technology category filter"
         >
@@ -219,8 +224,8 @@ export default function TechEcosystem() {
               )}
             </button>
           ))}
-        </motion.div>
-      </div>
+        </div>
+      </motion.div>
 
       {/* ── Tech pills ───────────────────────────────────────────── */}
       <motion.div
